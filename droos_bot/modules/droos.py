@@ -3,7 +3,7 @@ Droos handler module.
 """
 
 from pandas import Series, DataFrame
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
 from telegram.utils.helpers import escape_markdown
 from telegram_bot_pagination import InlineKeyboardPaginator
@@ -41,7 +41,6 @@ def series_callback_handler(update: Update, _: CallbackContext) -> None:
     query.edit_message_text(
         text=text,
         reply_markup=reply_markup,
-        parse_mode=ParseMode.MARKDOWN_V2,
     )
 
 
@@ -50,10 +49,12 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     """Sends Droos list."""
     query = update.callback_query
     query.answer()
+    # get series query
     if "|" in query.data:
         series_slug = query.data.split("|")[1]
         page_idx = 1
     else:
+        # lecture query
         series_slug = query.data.split("#")[0]
         page_idx = int(query.data.split("#")[1])
     series: DataFrame = sheet.df[sheet.df.slug == series_slug]
@@ -64,7 +65,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     buttons = []
     if item.main:
         buttons.append(
-            InlineKeyboardButton("📝أهم المحاور", callback_data=f"getd|main|{item.id}")
+            InlineKeyboardButton("📝 المحاور", callback_data=f"getd|main|{item.id}")
         )
     if item.video:
         buttons.append(
@@ -87,7 +88,6 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     query.edit_message_text(
         text=get_lecture_message_text(item),
         reply_markup=paginator.markup,
-        parse_mode=ParseMode.MARKDOWN_V2,
         disable_web_page_preview=True,
     )
 
@@ -110,35 +110,30 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
             chat_id=query.message.chat_id,
             video=file_id,
             caption=text,
-            parse_mode=ParseMode.MARKDOWN_V2,
         )
     elif media_type == "audio":
         dispatcher.bot.send_audio(
             chat_id=query.message.chat_id,
             audio=file_id,
             caption=text,
-            parse_mode=ParseMode.MARKDOWN_V2,
         )
     elif media_type == "voice":
         dispatcher.bot.send_voice(
             chat_id=query.message.chat_id,
             voice=file_id,
             caption=text,
-            parse_mode=ParseMode.MARKDOWN_V2,
         )
     elif media_type == "document":
         dispatcher.bot.send_document(
             chat_id=query.message.chat_id,
             document=file_id,
             caption=text,
-            parse_mode=ParseMode.MARKDOWN_V2,
         )
     elif media_type == "photo":
         dispatcher.bot.send_photo(
             chat_id=query.message.chat_id,
             photo=file_id,
             caption=text,
-            parse_mode=ParseMode.MARKDOWN_V2,
         )
 
 
@@ -150,14 +145,8 @@ dispatcher.add_handler(
     )
 )
 # lectures
+dispatcher.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^gets\|"))
+dispatcher.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^[\w_]+#"))
 dispatcher.add_handler(
-    CallbackQueryHandler(droos_handler, pattern=r"^gets\|", run_async=True)
-)
-dispatcher.add_handler(
-    CallbackQueryHandler(droos_handler, pattern=r"^[\w_]+#", run_async=True)
-)
-dispatcher.add_handler(
-    CallbackQueryHandler(
-        get_lecture_callback_handler, pattern=r"^getd\|", run_async=True
-    )
+    CallbackQueryHandler(get_lecture_callback_handler, pattern=r"^getd\|")
 )

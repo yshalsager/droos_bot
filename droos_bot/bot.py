@@ -4,8 +4,6 @@ Telegram Bot
 import pickle
 from pathlib import Path
 
-from telegram import ParseMode
-
 from droos_bot import updater, PARENT_DIR
 from droos_bot.modules import ALL_MODULES
 from droos_bot.utils.modules_loader import load_modules
@@ -26,7 +24,6 @@ def main() -> None:
             "`Restarted Successfully!`",
             restart_message["chat"],
             restart_message["message"],
-            parse_mode=ParseMode.MARKDOWN_V2,
         )
         Path("restart.pickle").unlink()
     # Block until you press Ctrl-C or the process receives SIGINT, SIGTERM or

@@ -2,7 +2,7 @@
 Files handler module.
 """
 
-from telegram import Update, ParseMode
+from telegram import Update
 from telegram.ext import CallbackContext, MessageHandler, Filters
 
 from droos_bot import dispatcher
@@ -22,7 +22,6 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
     message += "```"
     update.effective_message.reply_text(
         message,
-        parse_mode=ParseMode.MARKDOWN_V2,
     )
 
 

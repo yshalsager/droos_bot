@@ -5,7 +5,8 @@ from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from sys import stdout, stderr
 
-from telegram.ext import Updater, PicklePersistence
+from telegram import ParseMode
+from telegram.ext import Updater, PicklePersistence, Defaults
 
 # paths
 from droos_bot.gsheet.spreadsheet import Spreadsheet
@@ -38,7 +39,10 @@ LOGGER.setLevel(logging.INFO)
 
 # bot
 persistence = PicklePersistence(filename=f"{PARENT_DIR}/bot.pickle")
-updater = Updater(BOT_TOKEN, persistence=persistence, use_context=True)
+defaults = Defaults(parse_mode=ParseMode.MARKDOWN_V2, run_async=True)
+updater = Updater(
+    BOT_TOKEN, persistence=persistence, use_context=True, defaults=defaults
+)
 dispatcher = updater.dispatcher
 sheet = Spreadsheet(
     f"{PARENT_DIR}/service_account.json", CONFIG["sheet_id"], CONFIG["sheet_name"]

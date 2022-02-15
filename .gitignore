@@ -68,6 +68,6 @@ venv.bak/
 # Bot files
 config.json
 bot.pickle
-last_run*.log
+last_run.log*
 *.session
 service_account*.json

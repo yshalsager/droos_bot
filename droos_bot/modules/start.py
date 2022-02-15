@@ -12,5 +12,5 @@ def start(update: Update, _: CallbackContext) -> None:
     update.message.reply_text("Hi!")
 
 
-dispatcher.add_handler(CommandHandler("start", start, run_async=True))
-dispatcher.add_handler(CommandHandler("help", start, run_async=True))
+dispatcher.add_handler(CommandHandler("start", start))
+dispatcher.add_handler(CommandHandler("help", start))
