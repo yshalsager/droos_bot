@@ -12,7 +12,8 @@ def tg_exceptions_handler(func):
         except BadRequest as err:
             if "Message is not modified" in err.message:
                 pass
-            raise err
+            else:
+                raise err
         except RetryAfter as error:
             sleep(error.retry_after)
             return tg_exceptions_handler(func(*args, **kwargs))
