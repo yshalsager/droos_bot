@@ -24,7 +24,7 @@ def get_series(page=1) -> (str, InlineKeyboardMarkup):
     paginator = InlineKeyboardPaginator(
         len(sheet.series), current_page=page, data_pattern="list_series#{page}"
     )
-    series_list = sheet.series.iloc[page - 1: page + 4]
+    series_list = sheet.series.iloc[page - 1 : page + 4]
     for slug, series in series_list.iteritems():
         paginator.add_before(
             InlineKeyboardButton(series.item(), callback_data=f"gets|{slug}")
@@ -150,7 +150,8 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
 
 
 # series
-dispatcher.add_handler(CommandHandler("series", series_command_handler))
+dispatcher.add_handler(CommandHandler("start", series_command_handler))
+dispatcher.add_handler(CommandHandler("help", series_command_handler))
 dispatcher.add_handler(
     CallbackQueryHandler(series_callback_handler, pattern=r"^list_series#")
 )

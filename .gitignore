@@ -71,3 +71,4 @@ bot.pickle
 last_run.log*
 *.session
 service_account*.json
+tmp_*
