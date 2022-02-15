@@ -1,9 +1,8 @@
 import logging
 from pathlib import Path
-from typing import List, Dict
 
 from gspread_pandas import Spread, Client, conf
-from pandas import DataFrame
+from pandas import DataFrame, Series
 
 logger = logging.getLogger(__name__)
 
@@ -21,9 +20,7 @@ class Spreadsheet:
         self.df = self.worksheet.sheet_to_df()
         self.df: DataFrame = self.df.iloc[1:]
         # self.series = self.df.series.unique().tolist()
-        self.series: Dict[str : List[str]] = (
-            self.df.groupby("series")["slug"].unique().agg(list).to_dict()
-        )
+        self.series: Series = self.df.groupby("slug")["series"].unique()
 
     #
     # def __len__(self):

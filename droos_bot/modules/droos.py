@@ -18,13 +18,18 @@ def get_lecture_message_text(item: Series) -> str:
     return f"السلسلة: *{item.series.item()}*\nالدرس: *{item.lecture.item()}*\n"
 
 
-def get_series() -> (str, InlineKeyboardMarkup):
-    text = "السلاسل المتوفرة"
-    keyboard = []
-    for series, slug in sheet.series.items():
-        keyboard.append([InlineKeyboardButton(series, callback_data=f"gets|{slug[0]}")])
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    return text, reply_markup
+@tg_exceptions_handler
+def get_series(page=1) -> (str, InlineKeyboardMarkup):
+    text = "*السلاسل المتوفرة*"
+    paginator = InlineKeyboardPaginator(
+        len(sheet.series), current_page=page, data_pattern="list_series#{page}"
+    )
+    series_list = sheet.series.iloc[page - 1: page + 4]
+    for slug, series in series_list.iteritems():
+        paginator.add_before(
+            InlineKeyboardButton(series.item(), callback_data=f"gets|{slug}")
+        )
+    return text, paginator.markup
 
 
 @tg_exceptions_handler
@@ -35,9 +40,13 @@ def series_command_handler(update: Update, _: CallbackContext) -> None:
 
 @tg_exceptions_handler
 def series_callback_handler(update: Update, _: CallbackContext) -> None:
-    text, reply_markup = get_series()
     query = update.callback_query
     query.answer()
+    current_page = 1
+    current_page_callback_value = query.data.split("#")[1]
+    if current_page_callback_value:
+        current_page = int(current_page_callback_value)
+    text, reply_markup = get_series(page=current_page)
     query.edit_message_text(
         text=text,
         reply_markup=reply_markup,
@@ -84,7 +93,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
             InlineKeyboardButton("📎 ملخص", callback_data=f"getd|summary|{item.id}")
         )
     paginator.add_before(*buttons)
-    paginator.add_after(InlineKeyboardButton("رجوع", callback_data="list_series"))
+    paginator.add_after(InlineKeyboardButton("رجوع", callback_data="list_series#"))
     query.edit_message_text(
         text=get_lecture_message_text(item),
         reply_markup=paginator.markup,
@@ -138,11 +147,9 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
 
 
 # series
-dispatcher.add_handler(CommandHandler("series", series_command_handler, run_async=True))
+dispatcher.add_handler(CommandHandler("series", series_command_handler))
 dispatcher.add_handler(
-    CallbackQueryHandler(
-        series_callback_handler, pattern=r"^list_series", run_async=True
-    )
+    CallbackQueryHandler(series_callback_handler, pattern=r"^list_series#")
 )
 # lectures
 dispatcher.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^gets\|"))
