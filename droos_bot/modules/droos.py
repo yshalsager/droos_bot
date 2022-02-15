@@ -112,8 +112,11 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
     media = getattr(lecture_info, data).item()
     media_type, info = media.split("τ")
     file_id, caption = info.split("Ͱ")
-    text = caption if caption else get_lecture_message_text(lecture_info)
-    text = escape_markdown(text, version=2)
+    text = (
+        escape_markdown(caption, version=2)
+        if caption
+        else get_lecture_message_text(lecture_info)
+    )
     if media_type == "video":
         dispatcher.bot.send_video(
             chat_id=query.message.chat_id,
