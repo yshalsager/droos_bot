@@ -11,9 +11,9 @@ python-telegram-bot = "^13.11"
 python-telegram-bot-pagination = "^0.0.2"
 gspread = "^5.1.1"
 gspread-pandas = "^3.0.4"
-Pyrogram = "^1.4.7"
-TgCrypto = "^1.2.3"
-convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", rev = "4572b4d" }
+Pyrogram = { version = "^1.4.7", optional = true }
+TgCrypto = { version = "^1.2.3", optional = true }
+convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", rev = "4572b4d", optional = true }
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
