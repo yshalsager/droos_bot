@@ -72,3 +72,4 @@ last_run.log*
 *.session
 service_account*.json
 tmp_*
+*.db

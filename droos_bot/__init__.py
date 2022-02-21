@@ -8,9 +8,9 @@ from sys import stdout, stderr
 from telegram import ParseMode
 from telegram.ext import Updater, PicklePersistence, Defaults
 
-# paths
 from droos_bot.gsheet.spreadsheet import Spreadsheet
 
+# paths
 WORK_DIR = Path(__package__)
 PARENT_DIR = WORK_DIR.parent
 

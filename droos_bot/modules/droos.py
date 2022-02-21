@@ -9,13 +9,14 @@ from telegram.utils.helpers import escape_markdown
 from telegram_bot_pagination import InlineKeyboardPaginator
 
 from droos_bot import dispatcher, sheet
+from droos_bot.utils.analytics import add_new_chat_to_db, analysis
 from droos_bot.utils.telegram import tg_exceptions_handler
 
 
 def get_lecture_message_text(item: Series) -> str:
     if isinstance(item.series, str):
-        return f"السلسلة: *{item.series}*\nالدرس: *{item.lecture}*\n"
-    return f"السلسلة: *{item.series.item()}*\nالدرس: *{item.lecture.item()}*\n"
+        return f"🗂 السلسلة: *{item.series}*\n📚 الدرس: *{item.lecture}*\n"
+    return f"السلسلة: * 🗂{item.series.item()}*\n📚 الدرس: *{item.lecture.item()}*\n"
 
 
 @tg_exceptions_handler
@@ -33,6 +34,7 @@ def get_series(page=1) -> (str, InlineKeyboardMarkup):
 
 
 @tg_exceptions_handler
+@add_new_chat_to_db
 def series_command_handler(update: Update, _: CallbackContext) -> None:
     text, reply_markup = get_series()
     update.message.reply_text(text, reply_markup=reply_markup)
@@ -102,6 +104,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
 
 
 @tg_exceptions_handler
+@analysis
 def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
@@ -147,6 +150,7 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
             photo=file_id,
             caption=text,
         )
+    return lecture_info
 
 
 # series
