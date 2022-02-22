@@ -28,16 +28,15 @@ def get_lecture_message_text(item: Series) -> str:
     return f"السلسلة: * 🗂{item.series.item()}*\n📚 الدرس: *{item.lecture.item()}*\n"
 
 
-@tg_exceptions_handler
-def get_series(page=1) -> (str, InlineKeyboardMarkup):
+def get_series(series, page=1) -> (str, InlineKeyboardMarkup):
     text = "*السلاسل المتوفرة*"
     paginator = InlineKeyboardPaginator(
-        len(sheet.series), current_page=page, data_pattern="list_series#{page}"
+        len(series), current_page=page, data_pattern="list_series#{page}"
     )
-    series_list = sheet.series.iloc[page - 1 : page + 4]
-    for slug, series in series_list.iteritems():
+    series_list = series.iloc[page - 1 : page + 4]
+    for slug, series_ in series_list.iteritems():
         paginator.add_before(
-            InlineKeyboardButton(series.item(), callback_data=f"gets|{slug}")
+            InlineKeyboardButton(series_.item(), callback_data=f"gets|{slug}")
         )
     return text, paginator.markup
 
@@ -45,7 +44,7 @@ def get_series(page=1) -> (str, InlineKeyboardMarkup):
 @tg_exceptions_handler
 @add_new_chat_to_db
 def series_command_handler(update: Update, _: CallbackContext) -> None:
-    text, reply_markup = get_series()
+    text, reply_markup = get_series(sheet.series)
     update.message.reply_text(text, reply_markup=reply_markup)
 
 
@@ -57,7 +56,7 @@ def series_callback_handler(update: Update, _: CallbackContext) -> None:
     current_page_callback_value = query.data.split("#")[1]
     if current_page_callback_value:
         current_page = int(current_page_callback_value)
-    text, reply_markup = get_series(page=current_page)
+    text, reply_markup = get_series(sheet.series, page=current_page)
     query.edit_message_text(
         text=text,
         reply_markup=reply_markup,
@@ -106,9 +105,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     paginator.add_before(*buttons)
     paginator.add_after(InlineKeyboardButton("رجوع", callback_data="list_series#"))
     query.edit_message_text(
-        text=get_lecture_message_text(item),
-        reply_markup=paginator.markup,
-        disable_web_page_preview=True,
+        text=get_lecture_message_text(item), reply_markup=paginator.markup
     )
 
 
@@ -164,7 +161,7 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
 
 # series
 dispatcher.add_handler(
-    MessageHandler(Filters.text("السلاسل العلمية"), series_command_handler)
+    MessageHandler(Filters.regex("السلاسل العلمية"), series_command_handler)
 )
 dispatcher.add_handler(
     CallbackQueryHandler(series_callback_handler, pattern=r"^list_series#")
