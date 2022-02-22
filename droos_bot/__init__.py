@@ -39,7 +39,9 @@ LOGGER.setLevel(logging.INFO)
 
 # bot
 persistence = PicklePersistence(filename=f"{PARENT_DIR}/bot.pickle")
-defaults = Defaults(parse_mode=ParseMode.MARKDOWN_V2, run_async=True)
+defaults = Defaults(
+    parse_mode=ParseMode.MARKDOWN_V2, run_async=True, disable_web_page_preview=True
+)
 updater = Updater(
     BOT_TOKEN, persistence=persistence, use_context=True, defaults=defaults
 )
