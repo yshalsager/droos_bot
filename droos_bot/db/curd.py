@@ -16,11 +16,7 @@ def increment_series_requests(series_info: DataFrame):
     if series:
         series.requests += 1
     else:
-        session.add(
-            Series(
-                id=series_info.slug.item(), name=series_info.series.item(), requests=1
-            )
-        )
+        session.add(Series(id=series_info.slug.item(), requests=1))
     session.commit()
 
 
