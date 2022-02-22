@@ -3,8 +3,17 @@ Droos handler module.
 """
 
 from pandas import Series, DataFrame
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import CallbackContext, CommandHandler, CallbackQueryHandler
+from telegram import (
+    Update,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
+from telegram.ext import (
+    CallbackContext,
+    CallbackQueryHandler,
+    MessageHandler,
+    Filters,
+)
 from telegram.utils.helpers import escape_markdown
 from telegram_bot_pagination import InlineKeyboardPaginator
 
@@ -154,8 +163,9 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
 
 
 # series
-dispatcher.add_handler(CommandHandler("start", series_command_handler))
-dispatcher.add_handler(CommandHandler("help", series_command_handler))
+dispatcher.add_handler(
+    MessageHandler(Filters.text("السلاسل العلمية"), series_command_handler)
+)
 dispatcher.add_handler(
     CallbackQueryHandler(series_callback_handler, pattern=r"^list_series#")
 )
