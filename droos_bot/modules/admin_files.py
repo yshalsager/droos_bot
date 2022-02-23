@@ -1,5 +1,5 @@
 """
-Files handler module.
+Admin files handler module.
 """
 
 from telegram import Update
@@ -27,8 +27,9 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
 
 filter_bot_admin = FilterBotAdmin()
 
+# This conflicts with files_conversation_handler when sender is a bot admin, but it's not a big deal
 messages_handler = MessageHandler(
-    (Filters.attachment | Filters.photo) & filter_bot_admin,
+    Filters.attachment & filter_bot_admin & Filters.private,
     files_receiver,
 )
 dispatcher.add_handler(messages_handler)
