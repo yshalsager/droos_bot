@@ -161,7 +161,7 @@ def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
 
 # series
 dispatcher.add_handler(
-    MessageHandler(Filters.regex("السلاسل العلمية"), series_command_handler)
+    MessageHandler(Filters.regex("^السلاسل العلمية$"), series_command_handler)
 )
 dispatcher.add_handler(
     CallbackQueryHandler(series_callback_handler, pattern=r"^list_series#")
