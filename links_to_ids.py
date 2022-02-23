@@ -41,7 +41,7 @@ async def main():
 
     for link in telegram_links:
         message = await telegram_client.get_messages(
-            config["tg_chat_id"], int(link.value.split("/")[-1])
+            f"@{link.value.split('/')[-2]}", int(link.value.split("/")[-1])
         )
         if not message.media:
             print(f"{link}: no media")
