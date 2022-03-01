@@ -1,4 +1,4 @@
-from sqlalchemy import VARCHAR, INT, Column, BIGINT
+from sqlalchemy import BIGINT, INT, VARCHAR, Column
 
 from droos_bot.db.base import Base
 
@@ -11,5 +11,5 @@ class Chat(Base):
     type: int = Column(INT(), nullable=False)  # 0=user, 1=group, 2=channel
     usage_times: int = Column(INT(), nullable=False, default=0)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Chat(user_id={self.user_id}, user_name={self.user_name})>"

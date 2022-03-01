@@ -7,7 +7,7 @@ from sys import executable
 from telegram import Update
 from telegram.ext import CallbackContext, CommandHandler
 
-from droos_bot import dispatcher, PARENT_DIR
+from droos_bot import PARENT_DIR, dispatcher
 from droos_bot.utils.filters import FilterBotAdmin
 
 

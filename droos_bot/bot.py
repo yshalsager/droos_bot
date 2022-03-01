@@ -4,7 +4,7 @@ Telegram Bot
 import pickle
 from pathlib import Path
 
-from droos_bot import updater, PARENT_DIR
+from droos_bot import PARENT_DIR, updater
 from droos_bot.modules import ALL_MODULES
 from droos_bot.utils.modules_loader import load_modules
 
@@ -20,7 +20,7 @@ def main() -> None:
         restart_message = pickle.loads(
             Path(f"{PARENT_DIR}/restart.pickle").read_bytes()
         )
-        updater.bot.edit_message_text(
+        updater.bot.edit_message_text(  # type: ignore
             "`Restarted Successfully!`",
             restart_message["chat"],
             restart_message["message"],

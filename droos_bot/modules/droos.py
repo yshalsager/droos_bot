@@ -1,19 +1,11 @@
 """
 Droos handler module.
 """
+from typing import Optional, Tuple, Union
 
-from pandas import Series, DataFrame
-from telegram import (
-    Update,
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-)
-from telegram.ext import (
-    CallbackContext,
-    CallbackQueryHandler,
-    MessageHandler,
-    Filters,
-)
+from pandas import DataFrame, Series
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import CallbackContext, CallbackQueryHandler, Filters, MessageHandler
 from telegram.utils.helpers import escape_markdown
 from telegram_bot_pagination import InlineKeyboardPaginator
 
@@ -22,7 +14,7 @@ from droos_bot.utils.analytics import add_new_chat_to_db, analysis
 from droos_bot.utils.telegram import tg_exceptions_handler
 
 
-def get_lecture_message_text(item: Series) -> str:
+def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
     if isinstance(item.series, str):
         series_text, lecture = item.series, item.lecture
     else:
@@ -30,7 +22,7 @@ def get_lecture_message_text(item: Series) -> str:
     return f"السلسلة: * 🗂{escape_markdown(series_text, version=2)}*\n📚 الدرس: *{lecture}*\n"
 
 
-def get_series(series, page=1) -> (str, InlineKeyboardMarkup):
+def get_series(series: Series, page: int = 1) -> Tuple[str, InlineKeyboardMarkup]:
     text = "*السلاسل المتوفرة*"
     paginator = InlineKeyboardPaginator(
         len(series), current_page=page, data_pattern="list_series#{page}"
@@ -117,13 +109,15 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
 
 @tg_exceptions_handler
 @analysis
-def get_lecture_callback_handler(update: Update, _: CallbackContext) -> None:
+def get_lecture_callback_handler(
+    update: Update, _: CallbackContext
+) -> Optional[Series]:
     query = update.callback_query
     query.answer()
-    _, data, lecture_id = query.data.split("|")
+    __, data, lecture_id = query.data.split("|")
     lecture_info = sheet.df[sheet.df.id == lecture_id]
     if lecture_info.empty or getattr(lecture_info, data).empty:
-        return
+        return None
     media = getattr(lecture_info, data).item()
     media_type, info = media.split("τ")
     file_id, caption = info.split("Ͱ")

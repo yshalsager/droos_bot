@@ -14,7 +14,7 @@ def get_modules(modules_path: Path) -> filter:
     )
 
 
-def load_modules(modules, directory):
+def load_modules(modules: filter, directory: str) -> None:
     """Load all modules in modules list"""
     loaded_modules = []
     for module in modules:

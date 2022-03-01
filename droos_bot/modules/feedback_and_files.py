@@ -6,11 +6,11 @@ from telegram.ext import (
     CallbackContext,
     CommandHandler,
     ConversationHandler,
-    MessageHandler,
     Filters,
+    MessageHandler,
 )
 
-from droos_bot import dispatcher, CONFIG
+from droos_bot import CONFIG, dispatcher
 from droos_bot.modules.search import cancel_search_handler
 from droos_bot.utils.keyboards import cancel_keyboard
 from droos_bot.utils.telegram import tg_exceptions_handler
@@ -22,6 +22,7 @@ START_RECEIVING_FILES = 2
 @tg_exceptions_handler
 def feedback_handler(update: Update, _: CallbackContext) -> int:
     """Handle feedback from users."""
+    assert update.effective_message is not None
     update.message.reply_text(
         "يمكنك كتابة ما تريد إرساله للمشرفين على البوت هنا\nبعد الانتهاء اضغط على زر إنهاء الموجود بالأسفل",
         reply_to_message_id=update.effective_message.message_id,
@@ -32,6 +33,8 @@ def feedback_handler(update: Update, _: CallbackContext) -> int:
 
 @tg_exceptions_handler
 def forward_feedback(update: Update, context: CallbackContext) -> None:
+    assert update.effective_message is not None
+    assert update.effective_chat is not None
     context.bot.forward_message(
         chat_id=CONFIG["tg_feedback_chat_id"],
         from_chat_id=update.effective_chat.id,
@@ -45,6 +48,7 @@ def forward_feedback(update: Update, context: CallbackContext) -> None:
 @tg_exceptions_handler
 def files_handler(update: Update, _: CallbackContext) -> int:
     """Handle files from users."""
+    assert update.effective_message is not None
     update.message.reply_text(
         "يمكنك إرسال مواد لإضافتها للبوت هنا\nبعد الانتهاء اضغط على زر إنهاء الموجود بالأسفل",
         reply_to_message_id=update.effective_message.message_id,

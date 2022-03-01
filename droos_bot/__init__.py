@@ -3,10 +3,10 @@ import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
-from sys import stdout, stderr
+from sys import stderr, stdout
 
 from telegram import ParseMode
-from telegram.ext import Updater, PicklePersistence, Defaults
+from telegram.ext import Defaults, Dispatcher, PicklePersistence, Updater
 
 from droos_bot.gsheet.spreadsheet import Spreadsheet
 
@@ -42,10 +42,10 @@ persistence = PicklePersistence(filename=f"{PARENT_DIR}/bot.pickle")
 defaults = Defaults(
     parse_mode=ParseMode.MARKDOWN_V2, run_async=True, disable_web_page_preview=True
 )
-updater = Updater(
+updater: Updater = Updater(
     BOT_TOKEN, persistence=persistence, use_context=True, defaults=defaults
 )
-dispatcher = updater.dispatcher
+dispatcher: Dispatcher = updater.dispatcher  # type: ignore
 sheet = Spreadsheet(
     f"{PARENT_DIR}/service_account.json", CONFIG["sheet_id"], CONFIG["sheet_name"]
 )

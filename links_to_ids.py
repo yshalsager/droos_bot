@@ -10,7 +10,7 @@ from typing import List, Union
 from convopyro import Conversation
 from gspread import Cell
 from pyrogram import Client, filters
-from pyrogram.types import Audio, Photo, Video, Voice, Document
+from pyrogram.types import Audio, Document, Photo, Video, Voice
 
 from droos_bot.gsheet.spreadsheet import Spreadsheet
 

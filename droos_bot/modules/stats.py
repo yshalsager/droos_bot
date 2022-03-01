@@ -2,21 +2,21 @@
 from typing import List
 
 from pandas import DataFrame
-from telegram import Update, ParseMode
+from telegram import ParseMode, Update
 from telegram.ext import CallbackContext, CommandHandler
 
 from droos_bot import dispatcher, sheet
-from droos_bot.db import Series, Lecture
+from droos_bot.db import Lecture, Series
 from droos_bot.db.curd import (
     get_chats_count,
-    get_usage_count,
-    get_top_series,
     get_top_lectures,
+    get_top_series,
+    get_usage_count,
 )
 from droos_bot.utils.filters import FilterBotAdmin
 
 
-def stats(update: Update, _: CallbackContext):
+def stats(update: Update, _: CallbackContext) -> None:
     stats_message = update.message.reply_text("جاري تحضير الإحصائيات…")
     all_chats, active_chats = get_chats_count()
     usage_times, series_requests, lecture_requests = get_usage_count()
@@ -35,12 +35,14 @@ def stats(update: Update, _: CallbackContext):
         f"$top_lectures\n"
     )
     top_series_message = ""
-    for series in top_series:
-        top_series_message += f"  `{sheet.df[sheet.df.slug == series.id].iloc[0].series}`: {str(series.requests)} مرة\n"
+    if top_series:
+        for series in top_series:
+            top_series_message += f"  `{sheet.df[sheet.df.slug == series.id].iloc[0].series}`: {str(series.requests)} مرة\n"
     top_lectures_message = ""
-    for lecture in top_lectures:
-        lecture_info: DataFrame = sheet.df[sheet.df.id == lecture.id]
-        top_lectures_message += f"  `{lecture_info.series.item()} ({lecture_info.lecture.item()})`: {str(lecture.requests)} مرة\n"
+    if top_lectures:
+        for lecture in top_lectures:
+            lecture_info: DataFrame = sheet.df[sheet.df.id == lecture.id]
+            top_lectures_message += f"  `{lecture_info.series.item()} ({lecture_info.lecture.item()})`: {str(lecture.requests)} مرة\n"
     message = message.replace("$top_series", top_series_message).replace(
         "$top_lectures", top_lectures_message
     )

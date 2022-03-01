@@ -1,13 +1,15 @@
 """
 Data search module
 """
+from typing import Optional
+
 from telegram import Update
 from telegram.ext import (
     CallbackContext,
+    CommandHandler,
+    ConversationHandler,
     Filters,
     MessageHandler,
-    ConversationHandler,
-    CommandHandler,
 )
 
 from droos_bot import dispatcher, sheet
@@ -20,6 +22,7 @@ START_SEARCH = 0
 
 @tg_exceptions_handler
 def search_handler(update: Update, _: CallbackContext) -> int:
+    assert update.effective_message is not None
     update.message.reply_text(
         "اكتب ما تريد البحث عنه",
         reply_to_message_id=update.effective_message.message_id,
@@ -29,7 +32,8 @@ def search_handler(update: Update, _: CallbackContext) -> int:
 
 
 @tg_exceptions_handler
-def search_for_text(update: Update, _: CallbackContext) -> None:
+def search_for_text(update: Update, _: CallbackContext) -> Optional[int]:
+    assert update.effective_message is not None
     search_text = update.effective_message.text.strip()
     match = (
         sheet.df[sheet.df.series.str.contains(search_text)]
@@ -40,7 +44,7 @@ def search_for_text(update: Update, _: CallbackContext) -> None:
         update.message.reply_text(
             "لا يوجد نتائج", reply_to_message_id=update.effective_message.message_id
         )
-        return
+        return None
 
     text, reply_markup = get_series(match)
     update.message.reply_text(
