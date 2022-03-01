@@ -82,6 +82,10 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
         len(series), current_page=page_idx, data_pattern=series_slug + "#{page}"
     )
     buttons = []
+    if item.book:
+        buttons.append(
+            InlineKeyboardButton("📕 الكتاب", callback_data=f"getd|book|{item.id}")
+        )
     if item.main:
         buttons.append(
             InlineKeyboardButton("📝 المحاور", callback_data=f"getd|main|{item.id}")
