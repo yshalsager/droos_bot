@@ -24,8 +24,10 @@ from droos_bot.utils.telegram import tg_exceptions_handler
 
 def get_lecture_message_text(item: Series) -> str:
     if isinstance(item.series, str):
-        return f"🗂 السلسلة: *{item.series}*\n📚 الدرس: *{item.lecture}*\n"
-    return f"السلسلة: * 🗂{item.series.item()}*\n📚 الدرس: *{item.lecture.item()}*\n"
+        series_text, lecture = item.series, item.lecture
+    else:
+        series_text, lecture = item.series.item(), item.lecture.item()
+    return f"السلسلة: * 🗂{escape_markdown(series_text, version=2)}*\n📚 الدرس: *{lecture}*\n"
 
 
 def get_series(series, page=1) -> (str, InlineKeyboardMarkup):
