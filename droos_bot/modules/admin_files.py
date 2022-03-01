@@ -29,7 +29,7 @@ filter_bot_admin = FilterBotAdmin()
 
 # This conflicts with files_conversation_handler when sender is a bot admin, but it's not a big deal
 messages_handler = MessageHandler(
-    Filters.attachment & filter_bot_admin & Filters.private,
+    Filters.attachment & filter_bot_admin & Filters.chat_type.private,
     files_receiver,
 )
 dispatcher.add_handler(messages_handler)
