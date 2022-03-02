@@ -23,6 +23,9 @@ isort = "^5.10.1"
 mypy = "^0.931"
 flake8 = "^4.0.1"
 
+[tool.poetry.extras]
+links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
