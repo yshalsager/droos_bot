@@ -22,10 +22,9 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
         if isinstance(update.effective_message.effective_attachment, list)
         else update.effective_message.effective_attachment.file_id
     )
-    message = f"```{file_id}Ͱ"
+    message = f"`{file_id}`Ͱ"
     if update.effective_message.caption_markdown_v2_urled:
-        message += update.effective_message.caption_markdown_v2_urled
-    message += "```"
+        message += f"`{update.effective_message.caption_markdown_v2_urled}`"
     update.effective_message.reply_text(
         message,
     )
