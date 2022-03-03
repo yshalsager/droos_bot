@@ -13,6 +13,8 @@ from droos_bot import dispatcher, sheet
 from droos_bot.utils.analytics import add_new_chat_to_db, analysis
 from droos_bot.utils.telegram import tg_exceptions_handler
 
+page_size = 5
+
 
 def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
     if isinstance(item.series, str):
@@ -25,9 +27,12 @@ def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
 def get_series(series: Series, page: int = 1) -> Tuple[str, InlineKeyboardMarkup]:
     text = "*السلاسل المتوفرة*"
     paginator = InlineKeyboardPaginator(
-        len(series), current_page=page, data_pattern="list_series#{page}"
+        round(len(series) / page_size),
+        current_page=page,
+        data_pattern="list_series#{page}",
     )
-    series_list = series.iloc[page - 1 : page + 4]
+    chunk_start: int = (page - 1) * page_size
+    series_list = series.iloc[chunk_start : chunk_start + page_size]
     for slug, series_ in series_list.iteritems():
         paginator.add_before(
             InlineKeyboardButton(series_.item(), callback_data=f"gets|{slug}")
