@@ -23,8 +23,8 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
         else update.effective_message.effective_attachment.file_id
     )
     message = f"`{file_id}`Ͱ"
-    if update.effective_message.caption_markdown_v2_urled:
-        message += f"`{update.effective_message.caption_markdown_v2_urled}`"
+    if update.effective_message.caption_html_urled:
+        message += f"`{update.effective_message.caption_html_urled}`"
     update.effective_message.reply_text(
         message,
     )

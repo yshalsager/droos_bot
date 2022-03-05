@@ -4,9 +4,8 @@ Droos handler module.
 from typing import Optional, Tuple, Union
 
 from pandas import DataFrame, Series
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.ext import CallbackContext, CallbackQueryHandler, Filters, MessageHandler
-from telegram.utils.helpers import escape_markdown
 from telegram_bot_pagination import InlineKeyboardPaginator
 
 from droos_bot import dispatcher, sheet
@@ -21,7 +20,7 @@ def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
         series_text, lecture = item.series, item.lecture
     else:
         series_text, lecture = item.series.item(), item.lecture.item()
-    return f"السلسلة: * 🗂{escape_markdown(series_text, version=2)}*\n📚 الدرس: *{lecture}*\n"
+    return f"السلسلة: <b> 🗂{series_text}</b>\n📚 الدرس: <b>{lecture}</b>\n"
 
 
 def get_series(series: Series, page: int = 1) -> Tuple[str, InlineKeyboardMarkup]:
@@ -108,7 +107,9 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     paginator.add_before(*buttons)
     paginator.add_after(InlineKeyboardButton("رجوع", callback_data="list_series#"))
     query.edit_message_text(
-        text=get_lecture_message_text(item), reply_markup=paginator.markup
+        text=get_lecture_message_text(item),
+        reply_markup=paginator.markup,
+        parse_mode=ParseMode.HTML,
     )
 
 
@@ -126,40 +127,41 @@ def get_lecture_callback_handler(
     media = getattr(lecture_info, data).item()
     media_type, info = media.split("τ")
     file_id, caption = info.split("Ͱ")
-    text = (
-        escape_markdown(caption, version=2)
-        if caption
-        else get_lecture_message_text(lecture_info)
-    )
+    text = caption if caption else get_lecture_message_text(lecture_info)
     if media_type == "video":
         dispatcher.bot.send_video(
             chat_id=query.message.chat_id,
             video=file_id,
             caption=text,
+            parse_mode=ParseMode.HTML,
         )
     elif media_type == "audio":
         dispatcher.bot.send_audio(
             chat_id=query.message.chat_id,
             audio=file_id,
             caption=text,
+            parse_mode=ParseMode.HTML,
         )
     elif media_type == "voice":
         dispatcher.bot.send_voice(
             chat_id=query.message.chat_id,
             voice=file_id,
             caption=text,
+            parse_mode=ParseMode.HTML,
         )
     elif media_type == "document":
         dispatcher.bot.send_document(
             chat_id=query.message.chat_id,
             document=file_id,
             caption=text,
+            parse_mode=ParseMode.HTML,
         )
     elif media_type == "photo":
         dispatcher.bot.send_photo(
             chat_id=query.message.chat_id,
             photo=file_id,
             caption=text,
+            parse_mode=ParseMode.HTML,
         )
     return lecture_info
 
