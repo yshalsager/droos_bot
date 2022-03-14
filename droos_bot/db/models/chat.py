@@ -12,4 +12,4 @@ class Chat(Base):
     usage_times: int = Column(INT(), nullable=False, default=0)
 
     def __repr__(self) -> str:
-        return f"<Chat(user_id={self.user_id}, user_name={self.user_name})>"
+        return f"<Chat(id={self.id}, user_id={self.user_id}, user_name={self.user_name}, type={self.type})>"

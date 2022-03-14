@@ -74,3 +74,7 @@ def get_top_series() -> List[Series]:
 
 def get_top_lectures() -> List[Lecture]:
     return session.query(Lecture).order_by(Lecture.requests.desc()).limit(5).all()  # type: ignore
+
+
+def get_all_chats() -> List[Chat]:
+    return session.query(Chat).all()  # type: ignore
