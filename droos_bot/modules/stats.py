@@ -37,12 +37,18 @@ def stats(update: Update, _: CallbackContext) -> None:
     top_series_message = ""
     if top_series:
         for series in top_series:
-            top_series_message += f"  `{sheet.df[sheet.df.slug == series.id].iloc[0].series}`: {str(series.requests)} مرة\n"
+            try:
+                top_series_message += f"  `{sheet.df[sheet.df.slug == series.id].iloc[0].series}`: {str(series.requests)} مرة\n"
+            except IndexError:
+                continue
     top_lectures_message = ""
     if top_lectures:
         for lecture in top_lectures:
-            lecture_info: DataFrame = sheet.df[sheet.df.id == lecture.id]
-            top_lectures_message += f"  `{lecture_info.series.item()} ({lecture_info.lecture.item()})`: {str(lecture.requests)} مرة\n"
+            try:
+                lecture_info: DataFrame = sheet.df[sheet.df.id == lecture.id]
+                top_lectures_message += f"  `{lecture_info.series.item()} ({lecture_info.lecture.item()})`: {str(lecture.requests)} مرة\n"
+            except ValueError:
+                continue
     message = message.replace("$top_series", top_series_message).replace(
         "$top_lectures", top_lectures_message
     )
