@@ -64,6 +64,7 @@ async def main():
         sheet.worksheet.sheet.update_cell(
             link.row, link.col, f"{message.media}τ{reply_message.text}"
         )
+        print(f"Updated cell {link}")
 
 
 if __name__ == "__main__":
