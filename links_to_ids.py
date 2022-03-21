@@ -22,7 +22,7 @@ telegram_client = Client(
 Conversation(telegram_client)
 
 
-async def main():
+async def main() -> None:
     """
     - Read Google sheet (using service account with write access)
     - Find all telegram links, using regex from config file
@@ -39,19 +39,22 @@ async def main():
     if not telegram_links:
         return
 
+    await telegram_client.send_message(config["tg_bot_username"], "/receive")
+
     for link in telegram_links:
         message = await telegram_client.get_messages(
             f"@{link.value.split('/')[-2]}", int(link.value.split("/")[-1])
         )
         if not message.media:
-            print(f"{link}: no media")
-            continue
-        media: Union[Photo, Audio, Video, Voice, Document] = getattr(
-            message, str(message.media)
-        )
-        if not media or not hasattr(media, "file_id"):
-            print(f"{link}: can't get media!")
-            continue
+            message_type = "text"
+        else:
+            media: Union[Photo, Audio, Video, Voice, Document] = getattr(
+                message, str(message.media), None
+            )
+            if not media or not hasattr(media, "file_id"):
+                print(f"{link}: can't get media!")
+                continue
+            message_type = str(message.media)
         await telegram_client.copy_message(
             chat_id=config["tg_bot_username"],
             from_chat_id=message.chat.id,
@@ -62,9 +65,11 @@ async def main():
         )
         await sleep(2)
         sheet.worksheet.sheet.update_cell(
-            link.row, link.col, f"{message.media}τ{reply_message.text}"
+            link.row, link.col, f"{message_type}τ{reply_message.text}"
         )
         print(f"Updated cell {link}")
+
+    await telegram_client.send_message(config["tg_bot_username"], "/done")
 
 
 if __name__ == "__main__":
