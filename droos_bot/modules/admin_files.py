@@ -3,10 +3,26 @@ Admin files handler module.
 """
 
 from telegram import Audio, Document, Update, Video, Voice
-from telegram.ext import CallbackContext, Filters, MessageHandler
+from telegram.ext import (
+    CallbackContext,
+    CommandHandler,
+    ConversationHandler,
+    Filters,
+    MessageHandler,
+)
 
 from droos_bot import dispatcher
 from droos_bot.utils.filters import FilterBotAdmin
+
+START_RECEIVING = 1
+
+
+def start_receiving(_: Update, __: CallbackContext) -> int:
+    return START_RECEIVING
+
+
+def stop_receiving(_: Update, __: CallbackContext) -> int:
+    return ConversationHandler.END
 
 
 def files_receiver(update: Update, _: CallbackContext) -> None:
@@ -16,15 +32,16 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
         update.effective_message.effective_attachment,
         (Document, Audio, Video, Voice, list),
     ):
-        return None
-    file_id = (
-        update.effective_message.effective_attachment[-1].file_id
-        if isinstance(update.effective_message.effective_attachment, list)
-        else update.effective_message.effective_attachment.file_id
-    )
-    message = f"`{file_id}`Ͱ"
-    if update.effective_message.caption_html_urled:
-        message += f"`{update.effective_message.caption_html_urled}`"
+        message = f"Ͱ`{update.effective_message.text_html_urled}`"
+    else:
+        file_id = (
+            update.effective_message.effective_attachment[-1].file_id
+            if isinstance(update.effective_message.effective_attachment, list)
+            else update.effective_message.effective_attachment.file_id
+        )
+        message = f"`{file_id}`Ͱ"
+        if update.effective_message.caption_html_urled:
+            message += f"`{update.effective_message.caption_html_urled}`"
     update.effective_message.reply_text(
         message,
     )
@@ -32,9 +49,18 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
 
 filter_bot_admin = FilterBotAdmin()
 
-# This conflicts with files_conversation_handler when sender is a bot admin, but it's not a big deal
-messages_handler = MessageHandler(
-    Filters.attachment & filter_bot_admin & Filters.chat_type.private,
-    files_receiver,
+admin_conversation_handler = ConversationHandler(
+    entry_points=[MessageHandler(Filters.regex("^/receive$"), start_receiving)],
+    states={
+        START_RECEIVING: [
+            MessageHandler(
+                ~Filters.command & filter_bot_admin & Filters.chat_type.private,
+                files_receiver,
+            )
+        ],
+    },
+    fallbacks=[
+        CommandHandler("done", stop_receiving),
+    ],
 )
-dispatcher.add_handler(messages_handler)
+dispatcher.add_handler(admin_conversation_handler)
