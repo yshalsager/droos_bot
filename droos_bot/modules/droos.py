@@ -128,6 +128,12 @@ def get_lecture_callback_handler(
     media_type, info = media.split("τ")
     file_id, caption = info.split("Ͱ")
     text = caption if caption else get_lecture_message_text(lecture_info)
+    if media_type == "text":
+        dispatcher.bot.send_message(
+            chat_id=query.message.chat_id,
+            text=caption,
+            parse_mode=ParseMode.HTML,
+        )
     if media_type == "video":
         dispatcher.bot.send_video(
             chat_id=query.message.chat_id,
