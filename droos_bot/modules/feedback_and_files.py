@@ -80,7 +80,8 @@ def reply_to_feedback(update: Update, context: CallbackContext) -> None:
     )
     reply_with_message_text = (
         f"*رسالتك:*\n```\n{replied_to_message_text}\n```\n\n"
-        f"*رد المشرف*:\n{context.match.group(1)}"
+        f"*رد المشرف*:\n{context.match.group(1)}\n\n"
+        f"للرد على هذه الرسالة اضغط على زر التواصل والاقتراحات أولا ثم أرسل الرد"
     )
     context.bot.send_message(
         update.effective_message.reply_to_message.forward_from.id,
