@@ -17,10 +17,11 @@
 - التواصل مع المشرفين.
 - إرسال مواد لمشرفي البوت.
 - الوصول السريع لوظائف البوت عن طريق لوحة مفاتيح أزرار.
+- الرد على المستخدمين بواسطة أمر مخصص يمكن استخدام داخل مجموعة استلام الرسائل. [`/reply`]
 - إحصائيات مستخدمي البوت وأكثر السلاسل والدروس طلبا (للمشرفين فقط). [`/stats`]
 - إرسال رسالة لكل المشتركين في البوت (للمشرفين فقط). [`/broadcast` في رد على رسالة]
 - إمكانية إعادة تشغيل البوت لتحميل البيانات مرة أخرى من التليجرام مباشرة (للمشرفين فقط). [`/restart`]
-- إمكانية تحديث بيانات ال Google Sheet الخاصة بمعرفات الملفات مباشرة من خلال البوت (يجب أن تشغل أداة التحويل يدويا لمرة واحدة قبل استخدام هذه الميزة) [`/update`]
+- إمكانية تحديث بيانات ال Google Sheet الخاصة بمعرفات الملفات مباشرة بواسطة البوت (يجب أن تشغل أداة التحويل يدويا لمرة واحدة قبل استخدام هذه الميزة) [`/update`]
 
 
 ## كيفية استخدام البوت
@@ -173,19 +174,19 @@ python3 -m droos_bot
 
 ## معلومات تقنية
 
-يستخدم البوت
+يستخدم البوت:
 
 - [Python 3.10](https://python.org/)
 - [Docker](https://www.docker.com/)
 
-ومكتبات بايثون
+ومكتبات بايثون:
 
 - [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot/)
 - [python-telegram-bot-pagination](https://github.com/ksinn/python-telegram-bot-pagination)
 - [https://github.com/burnash/gspread](https://github.com/burnash/gspread)
 - [gspread-pandas](https://github.com/aiguofer/gspread-pandas)
 
-وتستخدم أداة تحويل الروابط مكتبات
+وتستخدم أداة تحويل الروابط مكتبات:
 
 - [Pyrogram](https://github.com/pyrogram/pyrogram)
 - [convopyro](https://github.com/Ripeey/Conversation-Pyrogram)

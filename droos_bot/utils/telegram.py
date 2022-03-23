@@ -3,7 +3,7 @@ from time import sleep
 from typing import Any, Callable, TypeVar, cast
 
 from telegram import Update
-from telegram.error import BadRequest, RetryAfter
+from telegram.error import BadRequest, RetryAfter, Unauthorized
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -15,6 +15,11 @@ def tg_exceptions_handler(func: F) -> F:
             return cast(F, func(*args, **kwargs))
         except BadRequest as err:
             if "Message is not modified" in err.message:
+                pass
+            else:
+                raise err
+        except Unauthorized as err:
+            if "bot was blocked by the user" in err.message:
                 pass
             else:
                 raise err
