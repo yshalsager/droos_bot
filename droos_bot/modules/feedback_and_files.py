@@ -17,6 +17,11 @@ from droos_bot.utils.telegram import tg_exceptions_handler
 
 START_RECEIVING_FEEDBACK = 1
 START_RECEIVING_FILES = 2
+notice_message = (
+    "بعد الانتهاء اضغط على زر إنهاء الموجود بالأسفل\n"
+    "إذا كنت ترغب في أن نتواصل معك رجاء اترك معرف أو رابط حساب ليتواصل معك المشرفون من خلاله إن شاء الله "
+    "إذا كان معرف حسابك لا يظهر عند إعادة توجيه الرسائل"
+)
 
 
 @tg_exceptions_handler
@@ -24,7 +29,7 @@ def feedback_handler(update: Update, _: CallbackContext) -> int:
     """Handle feedback from users."""
     assert update.effective_message is not None
     update.message.reply_text(
-        "يمكنك كتابة ما تريد إرساله للمشرفين على البوت هنا\nبعد الانتهاء اضغط على زر إنهاء الموجود بالأسفل",
+        "يمكنك كتابة ما تريد إرساله للمشرفين على البوت هنا\n" + notice_message,
         reply_to_message_id=update.effective_message.message_id,
         reply_markup=cancel_keyboard,
     )
@@ -50,7 +55,7 @@ def files_handler(update: Update, _: CallbackContext) -> int:
     """Handle files from users."""
     assert update.effective_message is not None
     update.message.reply_text(
-        "يمكنك إرسال مواد لإضافتها للبوت هنا\nبعد الانتهاء اضغط على زر إنهاء الموجود بالأسفل",
+        "يمكنك إرسال مواد لإضافتها للبوت هنا\n" + notice_message,
         reply_to_message_id=update.effective_message.message_id,
         reply_markup=cancel_keyboard,
     )
