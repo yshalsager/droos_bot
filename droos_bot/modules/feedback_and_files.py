@@ -1,9 +1,7 @@
 """
 Feedback and files handler module.
 """
-import re
-
-from telegram import ParseMode, Update
+from telegram import MAX_MESSAGE_LENGTH, ParseMode, Update
 from telegram.ext import (
     CallbackContext,
     CommandHandler,
@@ -14,7 +12,7 @@ from telegram.ext import (
 
 from droos_bot import CONFIG, dispatcher
 from droos_bot.modules.search import cancel_search_handler
-from droos_bot.utils.filters import FeedbackMessageFilter
+from droos_bot.utils.filters import FeedbackMessageFilter, FilterBotAdmin
 from droos_bot.utils.keyboards import cancel_keyboard
 from droos_bot.utils.telegram import tg_exceptions_handler
 
@@ -68,36 +66,35 @@ def files_handler(update: Update, _: CallbackContext) -> int:
 @tg_exceptions_handler
 def reply_to_feedback(update: Update, context: CallbackContext) -> None:
     assert update.effective_message is not None
-    assert context.match is not None
-    # Handle the update if the message replied to is forwarded from the bot itself only
-    if not update.effective_message.reply_to_message.from_user.id == context.bot.id:
-        return
+    assert update.effective_chat is not None
     if not update.effective_message.reply_to_message.forward_from:
         update.effective_message.reply_text(
             "لا يمكن الرد على هذا المستخدم بسبب إعدادات حسابه",
             reply_to_message_id=update.effective_message.message_id,
         )
         return
-    replied_to_message_text = update.effective_message.reply_to_message.text_html_urled
-    admin_reply_message_text = update.effective_message.text_html_urled.replace(
-        context.match.group(1), ""
-    ).strip()
+    replied_to_message_text = (
+        update.effective_message.reply_to_message.text_html_urled or ""
+    )
     reply_with_message_text = (
-        f"<b>رسالتك:</b>\n{replied_to_message_text}\n\n"
-        f"<b>رد المشرف</b>:\n{admin_reply_message_text}\n\n"
+        f"<b>رد المشرف على رسالتك السابقة:</b>\n\n{replied_to_message_text[:MAX_MESSAGE_LENGTH - 150]}\n\n"
         f"<b>ملاحظة</b>:\nللرد على هذه الرسالة اضغط على زر التواصل والاقتراحات أولا ثم أرسل الرد"
     )
-    # TODO handle a case when message text is >= telegram.MAX_MESSAGE_LENGTH
     context.bot.send_message(
         update.effective_message.reply_to_message.forward_from.id,
         reply_with_message_text,
         parse_mode=ParseMode.HTML,
     )
+    context.bot.copy_message(
+        chat_id=update.effective_message.reply_to_message.forward_from.id,
+        from_chat_id=update.effective_chat.id,
+        message_id=update.effective_message.message_id,
+    )
     admin_message = (
         f'<a href="{update.effective_message.reply_to_message.link}">رُد</a> على '
         f'<a href="tg://user?id={update.effective_message.reply_to_message.forward_from.id}">'
-        f"{update.effective_message.reply_to_message.forward_from.full_name}</a> بـ:\n"
-        f"{admin_reply_message_text}"
+        f"{update.effective_message.reply_to_message.forward_from.full_name}</a>"
+        f'<a href="{update.effective_message.link}">بهذا الرد</a>'
     )
     update.effective_message.reply_text(
         admin_message,
@@ -148,11 +145,8 @@ files_conversation_handler = ConversationHandler(
 dispatcher.add_handler(feedback_conversation_handler)
 dispatcher.add_handler(files_conversation_handler)
 
+filter_bot_admin = FilterBotAdmin()
 filter_feedback_message = FeedbackMessageFilter(CONFIG["tg_feedback_chat_id"])
 dispatcher.add_handler(
-    MessageHandler(
-        Filters.regex(re.compile(r"^(/reply|/r)\s+([\S\s]+)$", re.M))
-        & filter_feedback_message,
-        reply_to_feedback,
-    )
+    MessageHandler(filter_bot_admin & filter_feedback_message, reply_to_feedback)
 )
