@@ -26,6 +26,8 @@ def update_(update: Update, _: CallbackContext) -> None:
     sheet_update_clean_output = "\n".join(
         list(filter(lambda x: "pyrogram" not in x, sheet_update_output.splitlines()))
     )
+    if not sheet_update_clean_output:
+        sheet_update_clean_output = "Nothing to update"
     update.effective_message.reply_text(
         f"```{sheet_update_clean_output}```",
         reply_to_message_id=update.effective_message.message_id,
