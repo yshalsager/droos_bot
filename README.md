@@ -61,16 +61,15 @@
 وحلت المشكلة عن طريق:
 
 - إضافة وظيفة للبوت تقوم عندما يرسل حساب مشرف البوت ملف إليه سيرد البوت بال file id الخاص بهذا الملف.
-- عمل أداة لأتمتة حساب شخصي، يقرأ روابط الملفات الموجودة على تليجرام من نفس Google Sheet ثم يرسلها للبوت ويقرأ رد البوت
-  ثم يستبدل الرابط بالid داخل Google Sheet.
+- عمل أداة لأتمتة حساب شخصي، يقرأ روابط الملفات الموجودة على تليجرام من نفس Google Sheet ثم يرسلها للبوت ويقرأ رد البوت ثم يستبدل الرابط بالid داخل Google Sheet، وربط هذه اﻷداة بأمر لتحديث بيانات البوت `/update` بحيث لا يضطر المشرف على البوت لتشغيل أي أكواد بنفسه.
 
+### 
 ## إعداد البوت (للمطورين)
 
 ### إعداد حساب خدمة للتعامل مع Google Sheet
 
 - ادخل إلى منصة جوجل للمطورين وأنشئ مشروعا إن لم يكن لديك واحد، ثم فعل الوصول
-  إلى [واجهة برمجة Google Sheet](https://console.developers.google.com/marketplace/product/google/sheets.googleapis.com)
-  .
+  إلى [واجهة برمجة Google Sheet](https://console.developers.google.com/marketplace/product/google/sheets.googleapis.com).
 - ادخل إلى [صفحة إعداد الصلاحيات](https://console.developers.google.com/apis/api/sheets.googleapis.com/credentials)،
   وأضف حسابي خدمة جديدين واحد بصلاحيات القراءة فقط "viewer" والثاني بصلاحيات القراءة والكتابة "editor" (تحتاجه أداة
   تحويل الروابط فقط).
