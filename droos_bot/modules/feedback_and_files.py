@@ -93,7 +93,7 @@ def reply_to_feedback(update: Update, context: CallbackContext) -> None:
     admin_message = (
         f'<a href="{update.effective_message.reply_to_message.link}">رُد</a> على '
         f'<a href="tg://user?id={update.effective_message.reply_to_message.forward_from.id}">'
-        f"{update.effective_message.reply_to_message.forward_from.full_name}</a>"
+        f"{update.effective_message.reply_to_message.forward_from.full_name}</a> "
         f'<a href="{update.effective_message.link}">بهذا الرد</a>'
     )
     update.effective_message.reply_text(
