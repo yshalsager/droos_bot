@@ -8,9 +8,9 @@ from droos_bot.utils.keyboards import main_keyboard
 
 @add_new_chat_to_db
 def start_handler(update: Update, _: CallbackContext) -> None:
-    assert update.effective_user is not None
+    assert update.effective_chat is not None
     welcome_text = (
-        f" مرحبا بك يا `{update.effective_user.full_name}`"
+        f" مرحبا بك يا `{update.effective_chat.full_name or update.effective_chat.title}`"
         f"\n بإمكانك استخدام البوت من خلال الضغط على الأزرار الظاهرة بالأسفل"
     )
     update.message.reply_text(welcome_text, reply_markup=main_keyboard)
