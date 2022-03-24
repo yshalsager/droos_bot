@@ -18,7 +18,7 @@ def update_(update: Update, _: CallbackContext) -> None:
     )
     if git_output:
         update.effective_message.reply_text(
-            f"```{git_output}```",
+            f"```\n{git_output}\n```",
             reply_to_message_id=update.effective_message.message_id,
         )
     # Update the sheet
@@ -29,7 +29,7 @@ def update_(update: Update, _: CallbackContext) -> None:
     if not sheet_update_clean_output:
         sheet_update_clean_output = "Nothing to update"
     update.effective_message.reply_text(
-        f"```{sheet_update_clean_output}```",
+        f"```\n{sheet_update_clean_output}\n```",
         reply_to_message_id=update.effective_message.message_id,
     )
     restart(update, _)
