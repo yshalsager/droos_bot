@@ -429,7 +429,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pyrogram"
-version = "1.4.15"
+version = "1.4.16"
 description = "Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
 category = "main"
 optional = true
@@ -698,7 +698,7 @@ links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "178ba54d91fa3b52fb7e7df07d218efa6001ec8c279094e8842fdd7c4905836e"
+content-hash = "593f259d6313d8aa77b7a0e031ff4cb04f8198956fb07d522c7bfbfcc55e92b7"
 
 [metadata.files]
 apscheduler = [
@@ -994,8 +994,8 @@ pyflakes = [
     {file = "pyflakes-2.4.0.tar.gz", hash = "sha256:05a85c2872edf37a4ed30b0cce2f6093e1d0581f8c19d7393122da7e25b2b24c"},
 ]
 pyrogram = [
-    {file = "Pyrogram-1.4.15-py3-none-any.whl", hash = "sha256:021a72c7654770d3d072e8ceaaeeb8135bce472b4628d133a3428e9d05c77365"},
-    {file = "Pyrogram-1.4.15.tar.gz", hash = "sha256:39ee3c44bfa118493e79b8714a36240dfc72731bf13c30096e42e999d8b0bce5"},
+    {file = "Pyrogram-1.4.16-py3-none-any.whl", hash = "sha256:8e130211afa1d16da7574100a44a1c5d12c55ad1a56d2c0515dabecb798407b2"},
+    {file = "Pyrogram-1.4.16.tar.gz", hash = "sha256:65800f6806bddb3dcab5c8951ce7b17597fd6f0663290f562a0ebe59ed1d5be4"},
 ]
 pysocks = [
     {file = "PySocks-1.7.1-py27-none-any.whl", hash = "sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299"},
