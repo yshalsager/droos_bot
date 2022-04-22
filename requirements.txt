@@ -31,5 +31,5 @@ sqlalchemy==1.4.32; (python_version >= "2.7" and python_full_version < "3.0.0") 
 tgcrypto==1.2.3; python_version >= "3.6" and python_version < "4.0"
 tornado==6.1; python_version >= "3.6"
 tzdata==2021.5; platform_system == "Windows" and python_version >= "3.6" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6")
-tzlocal==4.1; python_version >= "3.6"
+tzlocal==4.2; python_version >= "3.6"
 urllib3==1.26.8; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.6"
