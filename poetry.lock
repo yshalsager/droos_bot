@@ -177,7 +177,7 @@ reauth = ["pyu2f (>=0.1.5)"]
 
 [[package]]
 name = "google-auth-oauthlib"
-version = "0.5.0"
+version = "0.5.1"
 description = "Google Authentication Library"
 category = "main"
 optional = false
@@ -776,8 +776,8 @@ google-auth = [
     {file = "google_auth-2.6.0-py2.py3-none-any.whl", hash = "sha256:218ca03d7744ca0c8b6697b6083334be7df49b7bf76a69d555962fd1a7657b5f"},
 ]
 google-auth-oauthlib = [
-    {file = "google-auth-oauthlib-0.5.0.tar.gz", hash = "sha256:06c4ceb3ab2a93b85b8976bbe86cbb82ae1d1c02d2ded3cfd0847a8b6955263b"},
-    {file = "google_auth_oauthlib-0.5.0-py2.py3-none-any.whl", hash = "sha256:8b7ff4d2fe81e3bd034306aa665444360b3c67195b9dea582dddc7dfb8d89d34"},
+    {file = "google-auth-oauthlib-0.5.1.tar.gz", hash = "sha256:30596b824fc6808fdaca2f048e4998cc40fb4b3599eaea66d28dc7085b36c5b8"},
+    {file = "google_auth_oauthlib-0.5.1-py2.py3-none-any.whl", hash = "sha256:24f67735513c4c7134dbde2f1dee5a1deb6acc8dfcb577d7bff30d213a28e7b0"},
 ]
 greenlet = [
     {file = "greenlet-1.1.2-cp27-cp27m-macosx_10_14_x86_64.whl", hash = "sha256:58df5c2a0e293bf665a51f8a100d3e9956febfbf1d9aaf8c0677cf70218910c6"},
