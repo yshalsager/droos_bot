@@ -58,7 +58,7 @@ async def main() -> None:
         await telegram_client.copy_message(
             chat_id=config["tg_bot_username"],
             from_chat_id=message.chat.id,
-            message_id=message.message_id,
+            message_id=message.id,
         )
         reply_message = await telegram_client.listen.Message(
             filters.chat(config["tg_bot_username"]), timeout=10
