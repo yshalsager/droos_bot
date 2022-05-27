@@ -460,7 +460,7 @@ six = ">=1.5"
 
 [[package]]
 name = "python-telegram-bot"
-version = "13.11"
+version = "13.12"
 description = "We have made you a wrapper you can't refuse"
 category = "main"
 optional = false
@@ -698,7 +698,7 @@ links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "eec06a12c80a2b86a839d8e6083586e25ad72c339a4f5faed9339abb330f10f5"
+content-hash = "596ce60b60bb1132cd834e0c4cdacc5e2b0a7a4de448d6d8f69992038808f4e1"
 
 [metadata.files]
 apscheduler = [
@@ -1010,8 +1010,8 @@ python-dateutil = [
     {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
 python-telegram-bot = [
-    {file = "python-telegram-bot-13.11.tar.gz", hash = "sha256:baeff704baa2ac3dc17a944c02da888228ad258e89be2e5bcbd13a8a5102d573"},
-    {file = "python_telegram_bot-13.11-py3-none-any.whl", hash = "sha256:534f5bb0ff4ca34c9252e97e0b3bcdab81d97be0eb4821682a361cb426c00e55"},
+    {file = "python-telegram-bot-13.12.tar.gz", hash = "sha256:daf55fb6f418b8752317fd12df824dd717e3229a87d83810a4cdd6e442f66de5"},
+    {file = "python_telegram_bot-13.12-py3-none-any.whl", hash = "sha256:08246ecccbb0e7b2ac43d3b545c3bdabc71194b20be9620cd0ed96a2eb66820d"},
 ]
 python-telegram-bot-pagination = [
     {file = "python-telegram-bot-pagination-0.0.2.tar.gz", hash = "sha256:46fe884edcc61a346e2c0a8f7fa777486db50cc08a29ff8585d078f9f70c4ec1"},
