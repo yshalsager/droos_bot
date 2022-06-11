@@ -20,7 +20,7 @@ convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", rev =
 black = "^22.3.0"
 pre-commit = "^2.19.0"
 isort = "^5.10.1"
-mypy = "^0.960"
+mypy = "^0.961"
 flake8 = "^4.0.1"
 
 [tool.poetry.extras]
