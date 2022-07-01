@@ -10,7 +10,7 @@ python = "^3.9"
 python-telegram-bot = "^13.12"
 python-telegram-bot-pagination = "^0.0.2"
 gspread = "^5.4.0"
-gspread-pandas = "^3.2.0"
+gspread-pandas = "^3.2.2"
 SQLAlchemy = "^1.4.38"
 Pyrogram = { version = "^2.0.30", optional = true }
 TgCrypto = { version = "^1.2.3", optional = true }

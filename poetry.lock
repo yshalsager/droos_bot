@@ -79,17 +79,6 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
-name = "charset-normalizer"
-version = "2.1.0"
-description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
-category = "main"
-optional = false
-python-versions = ">=3.6.0"
-
-[package.extras]
-unicode_backport = ["unicodedata2"]
-
-[[package]]
 name = "click"
 version = "8.0.4"
 description = "Composable command line interface toolkit"
@@ -223,7 +212,7 @@ google-auth-oauthlib = ">=0.4.1"
 
 [[package]]
 name = "gspread-pandas"
-version = "3.2.0"
+version = "3.2.2"
 description = "A package to easily open an instance of a Google spreadsheet and interact with worksheets through Pandas DataFrames."
 category = "main"
 optional = false
@@ -237,7 +226,7 @@ gspread = ">=5.0.0"
 pandas = ">=0.20.0"
 
 [package.extras]
-dev = ["betamax", "betamax-serializers", "black", "bump2version", "coverage", "flake8", "isort", "oauth2client", "pip", "pre-commit", "pycryptodome", "pytest", "pytest-mock", "sphinx", "sphinx-rtd-theme", "tox", "twine", "wheel"]
+dev = ["pip", "sphinx", "sphinx-rtd-theme", "coverage", "twine", "bump2version", "tox", "flake8", "pytest", "pre-commit", "isort", "black", "pycryptodome", "betamax", "betamax-serializers", "pytest-mock", "oauth2client", "wheel"]
 
 [[package]]
 name = "identify"
@@ -706,7 +695,7 @@ links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "a18309fff4889b8bedf6bda9e53f2a01e3697a9497d3573ccf24181206e9d218"
+content-hash = "3469eface16e633640b8e68f5e64818ad9aa45a5a180659014e0bab6744e1ad6"
 
 [metadata.files]
 apscheduler = [
@@ -753,10 +742,6 @@ cfgv = [
 chardet = [
     {file = "chardet-4.0.0-py2.py3-none-any.whl", hash = "sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"},
     {file = "chardet-4.0.0.tar.gz", hash = "sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"},
-]
-charset-normalizer = [
-    {file = "charset-normalizer-2.1.0.tar.gz", hash = "sha256:575e708016ff3a5e3681541cb9d79312c416835686d054a23accb873b254f413"},
-    {file = "charset_normalizer-2.1.0-py3-none-any.whl", hash = "sha256:5189b6f22b01957427f35b6a08d9a0bc45b46d3788ef5a92e978433c7a35f8a5"},
 ]
 click = [
     {file = "click-8.0.4-py3-none-any.whl", hash = "sha256:6a7a62563bbfabfda3a38f3023a1db4a35978c0abd76f6c9605ecd6554d6d9b1"},
@@ -853,7 +838,8 @@ gspread = [
     {file = "gspread-5.4.0.tar.gz", hash = "sha256:b6172b62fa899e3e4199d2d0ea1008b64305554ba08d3d3a96e9123824fdec48"},
 ]
 gspread-pandas = [
-    {file = "gspread_pandas-3.2.0-py2.py3-none-any.whl", hash = "sha256:70d539a64206a8da0714e46eef7441e850de32d261efb7d95e86efca1cd056cc"},
+    {file = "gspread-pandas-3.2.2.tar.gz", hash = "sha256:72371ff295411f24acbed85026abbd0641c098f5c62c8454147feed71ec4850e"},
+    {file = "gspread_pandas-3.2.2-py2.py3-none-any.whl", hash = "sha256:928a8023d6dc8bb8331348eab673ef832ec910e07721f7efda85c7d1eca99af4"},
 ]
 identify = [
     {file = "identify-2.4.11-py2.py3-none-any.whl", hash = "sha256:fd906823ed1db23c7a48f9b176a1d71cb8abede1e21ebe614bac7bdd688d9213"},
