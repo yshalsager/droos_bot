@@ -1,7 +1,7 @@
 apscheduler==3.8.1; python_version >= "3.6"
 cachetools==4.2.2; python_version >= "3.6" and python_version < "4.0" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6")
 certifi==2021.10.8; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.6"
-charset-normalizer==2.1.0; python_full_version >= "3.6.0" and python_version >= "3.6"
+charset-normalizer==2.1.1; python_full_version >= "3.6.0" and python_version >= "3.6"
 convopyro @ git+https://github.com/Ripeey/Conversation-Pyrogram.git@4572b4d ; python_version >= "3.6"
 decorator==5.1.1; python_version >= "3.5"
 google-auth-oauthlib==0.5.2; python_version >= "3.6"
