@@ -12,17 +12,17 @@ six = ">=1.4.0"
 tzlocal = ">=1.2"
 
 [package.extras]
-zookeeper = ["kazoo"]
-twisted = ["twisted"]
-tornado = ["tornado (>=4.3)"]
-testing = ["pytest-asyncio", "pytest-asyncio (<0.6)", "mock", "pytest-tornado5", "pytest-cov", "pytest"]
-sqlalchemy = ["sqlalchemy (>=0.8)"]
-rethinkdb = ["rethinkdb (>=2.4.0)"]
-redis = ["redis (>=3.0)"]
-mongodb = ["pymongo (>=2.8)"]
-gevent = ["gevent"]
-doc = ["sphinx-rtd-theme", "sphinx"]
 asyncio = ["trollius"]
+doc = ["sphinx", "sphinx-rtd-theme"]
+gevent = ["gevent"]
+mongodb = ["pymongo (>=2.8)"]
+redis = ["redis (>=3.0)"]
+rethinkdb = ["rethinkdb (>=2.4.0)"]
+sqlalchemy = ["sqlalchemy (>=0.8)"]
+testing = ["mock", "pytest", "pytest-asyncio", "pytest-asyncio (<0.6)", "pytest-cov", "pytest-tornado5"]
+tornado = ["tornado (>=4.3)"]
+twisted = ["twisted"]
+zookeeper = ["kazoo"]
 
 [[package]]
 name = "black"
@@ -41,10 +41,10 @@ tomli = {version = ">=1.1.0", markers = "python_full_version < \"3.11.0a7\""}
 typing-extensions = {version = ">=3.10.0.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
-uvloop = ["uvloop (>=0.15.2)"]
-jupyter = ["tokenize-rt (>=3.2.0)", "ipython (>=7.8.0)"]
-d = ["aiohttp (>=3.7.4)"]
 colorama = ["colorama (>=0.4.3)"]
+d = ["aiohttp (>=3.7.4)"]
+jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
+uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "cachetools"
@@ -168,7 +168,7 @@ rsa = {version = ">=3.1.4,<5", markers = "python_version >= \"3.6\""}
 six = ">=1.9.0"
 
 [package.extras]
-aiohttp = ["requests (>=2.20.0,<3.0.0dev)", "aiohttp (>=3.6.2,<4.0.0dev)"]
+aiohttp = ["aiohttp (>=3.6.2,<4.0.0dev)", "requests (>=2.20.0,<3.0.0dev)"]
 pyopenssl = ["pyopenssl (>=20.0.0)"]
 reauth = ["pyu2f (>=0.1.5)"]
 
@@ -226,7 +226,7 @@ gspread = ">=5.0.0"
 pandas = ">=0.20.0"
 
 [package.extras]
-dev = ["pip", "sphinx", "sphinx-rtd-theme", "coverage", "twine", "bump2version", "tox", "flake8", "pytest", "pre-commit", "isort", "black", "pycryptodome", "betamax", "betamax-serializers", "pytest-mock", "oauth2client", "wheel"]
+dev = ["betamax", "betamax-serializers", "black", "bump2version", "coverage", "flake8", "isort", "oauth2client", "pip", "pre-commit", "pycryptodome", "pytest", "pytest-mock", "sphinx", "sphinx-rtd-theme", "tox", "twine", "wheel"]
 
 [[package]]
 name = "identify"
@@ -256,10 +256,10 @@ optional = false
 python-versions = ">=3.6.1,<4.0"
 
 [package.extras]
-pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
-requirements_deprecated_finder = ["pipreqs", "pip-api"]
 colors = ["colorama (>=0.4.3,<0.5.0)"]
+pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
 plugins = ["setuptools"]
+requirements_deprecated_finder = ["pip-api", "pipreqs"]
 
 [[package]]
 name = "mccabe"
@@ -485,7 +485,7 @@ python-versions = "*"
 
 [[package]]
 name = "pytz"
-version = "2022.2"
+version = "2022.2.1"
 description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
@@ -525,7 +525,7 @@ idna = ">=2.5,<3"
 urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
-security = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)"]
+security = ["cryptography (>=1.3.4)", "pyOpenSSL (>=0.14)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
@@ -574,24 +574,24 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
 greenlet = {version = "!=0.4.17", markers = "python_version >= \"3\" and (platform_machine == \"aarch64\" or platform_machine == \"ppc64le\" or platform_machine == \"x86_64\" or platform_machine == \"amd64\" or platform_machine == \"AMD64\" or platform_machine == \"win32\" or platform_machine == \"WIN32\")"}
 
 [package.extras]
-aiomysql = ["greenlet (!=0.4.17)", "aiomysql"]
-aiosqlite = ["typing_extensions (!=3.10.0.1)", "greenlet (!=0.4.17)", "aiosqlite"]
+aiomysql = ["aiomysql", "greenlet (!=0.4.17)"]
+aiosqlite = ["aiosqlite", "greenlet (!=0.4.17)", "typing_extensions (!=3.10.0.1)"]
 asyncio = ["greenlet (!=0.4.17)"]
-asyncmy = ["greenlet (!=0.4.17)", "asyncmy (>=0.2.3,!=0.2.4)"]
+asyncmy = ["asyncmy (>=0.2.3,!=0.2.4)", "greenlet (!=0.4.17)"]
 mariadb_connector = ["mariadb (>=1.0.1,!=1.1.2)"]
 mssql = ["pyodbc"]
 mssql_pymssql = ["pymssql"]
 mssql_pyodbc = ["pyodbc"]
-mypy = ["sqlalchemy2-stubs", "mypy (>=0.910)"]
-mysql = ["mysqlclient (>=1.4.0,<2)", "mysqlclient (>=1.4.0)"]
+mypy = ["mypy (>=0.910)", "sqlalchemy2-stubs"]
+mysql = ["mysqlclient (>=1.4.0)", "mysqlclient (>=1.4.0,<2)"]
 mysql_connector = ["mysql-connector-python"]
-oracle = ["cx_oracle (>=7,<8)", "cx_oracle (>=7)"]
+oracle = ["cx_oracle (>=7)", "cx_oracle (>=7,<8)"]
 postgresql = ["psycopg2 (>=2.7)"]
-postgresql_asyncpg = ["greenlet (!=0.4.17)", "asyncpg"]
+postgresql_asyncpg = ["asyncpg", "greenlet (!=0.4.17)"]
 postgresql_pg8000 = ["pg8000 (>=1.16.6,!=1.29.0)"]
 postgresql_psycopg2binary = ["psycopg2-binary"]
 postgresql_psycopg2cffi = ["psycopg2cffi"]
-pymysql = ["pymysql (<1)", "pymysql"]
+pymysql = ["pymysql", "pymysql (<1)"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
@@ -656,7 +656,7 @@ tzdata = {version = "*", markers = "platform_system == \"Windows\""}
 
 [package.extras]
 devenv = ["black", "pyroma", "pytest-cov", "zest.releaser"]
-test = ["pytest-mock (>=3.3)", "pytest (>=4.3)"]
+test = ["pytest (>=4.3)", "pytest-mock (>=3.3)"]
 
 [[package]]
 name = "urllib3"
@@ -668,7 +668,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 
 [package.extras]
 brotli = ["brotlipy (>=0.6.0)"]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "ipaddress", "pyOpenSSL (>=0.14)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
@@ -687,7 +687,7 @@ six = ">=1.9.0,<2"
 
 [package.extras]
 docs = ["proselint (>=0.10.2)", "sphinx (>=3)", "sphinx-argparse (>=0.2.5)", "sphinx-rtd-theme (>=0.4.3)", "towncrier (>=21.3)"]
-testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", "pytest (>=4)", "pytest-env (>=0.6.2)", "pytest-freezegun (>=0.4.1)", "pytest-mock (>=2)", "pytest-randomly (>=1)", "pytest-timeout (>=1)", "packaging (>=20.0)"]
+testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", "packaging (>=20.0)", "pytest (>=4)", "pytest-env (>=0.6.2)", "pytest-freezegun (>=0.4.1)", "pytest-mock (>=2)", "pytest-randomly (>=1)", "pytest-timeout (>=1)"]
 
 [extras]
 links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
@@ -1021,8 +1021,8 @@ python-telegram-bot-pagination = [
     {file = "python-telegram-bot-pagination-0.0.2.tar.gz", hash = "sha256:46fe884edcc61a346e2c0a8f7fa777486db50cc08a29ff8585d078f9f70c4ec1"},
 ]
 pytz = [
-    {file = "pytz-2022.2-py2.py3-none-any.whl", hash = "sha256:d9b245e63af49c4e51afdec5402f56b99c0cb483a84a12bb8b7db980386baade"},
-    {file = "pytz-2022.2.tar.gz", hash = "sha256:bc824559e43e8ab983426a49525079d186b25372ff63aa3430ccd527d95edc3a"},
+    {file = "pytz-2022.2.1-py2.py3-none-any.whl", hash = "sha256:220f481bdafa09c3955dfbdddb7b57780e9a94f5127e35456a48589b9e0c0197"},
+    {file = "pytz-2022.2.1.tar.gz", hash = "sha256:cea221417204f2d1a2aa03ddae3e867921971d0d76f14d87abb4414415bbdcf5"},
 ]
 pytz-deprecation-shim = [
     {file = "pytz_deprecation_shim-0.1.0.post0-py2.py3-none-any.whl", hash = "sha256:8314c9692a636c8eb3bda879b9f119e350e93223ae83e70e80c31675a0fdc1a6"},
