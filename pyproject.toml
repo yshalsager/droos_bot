@@ -7,14 +7,14 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-python-telegram-bot = "^13.13"
+python-telegram-bot = "^13.14"
 python-telegram-bot-pagination = "^0.0.2"
 gspread = "^5.5.0"
 gspread-pandas = "^3.2.2"
 SQLAlchemy = "^1.4.40"
 Pyrogram = { version = "^2.0.46", optional = true }
 TgCrypto = { version = "^1.2.3", optional = true }
-convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", rev = "4572b4d", optional = true }
+convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", rev = "a39cc9e", optional = true }
 
 [tool.poetry.dev-dependencies]
 black = "^22.8.0"
