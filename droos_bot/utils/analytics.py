@@ -17,7 +17,7 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 def add_new_chat_to_db(func: F) -> F:
     @wraps(func)
-    def wrapper(update: Update, context: CallbackContext) -> F:
+    def wrapper(update: Update, context: CallbackContext, *args, **kwargs) -> F:
         assert update.effective_chat is not None
         assert update.effective_chat.id is not None
         assert (
@@ -28,7 +28,7 @@ def add_new_chat_to_db(func: F) -> F:
             update.effective_chat.full_name or update.effective_chat.title,
             get_chat_type(update),
         )
-        return cast(F, func(update, context))
+        return cast(F, func(update, context, *args, **kwargs))
 
     return cast(F, wrapper)
 
