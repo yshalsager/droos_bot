@@ -17,7 +17,7 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 def add_new_chat_to_db(func: F) -> F:
     @wraps(func)
-    def wrapper(update: Update, context: CallbackContext, *args, **kwargs) -> F:
+    def wrapper(update: Update, context: CallbackContext, *args, **kwargs) -> F:  # type: ignore
         assert update.effective_chat is not None
         assert update.effective_chat.id is not None
         assert (

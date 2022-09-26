@@ -1,6 +1,7 @@
 """
 Droos handler module.
 """
+from functools import partial
 from typing import Optional, Tuple, Union
 
 from pandas import DataFrame, Series
@@ -8,11 +9,19 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Upda
 from telegram.ext import CallbackContext, CallbackQueryHandler, Filters, MessageHandler
 from telegram_bot_pagination import InlineKeyboardPaginator
 
-from droos_bot import dispatcher, sheet
+from droos_bot import DATA_COLUMNS, dispatcher, sheet
 from droos_bot.utils.analytics import add_new_chat_to_db, analysis
 from droos_bot.utils.telegram import tg_exceptions_handler
 
 page_size = 5
+lecture_components = {
+    "book": "📕 الكتاب",
+    "main": "📝 المحاور",
+    "video": "🎞 فيديو",
+    "voice": "🎧 صوتي",
+    "text": "📄 تفريغ",
+    "summary": "📎 ملخص",
+}
 
 
 def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
@@ -23,38 +32,47 @@ def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
     return f"السلسلة: <b> 🗂{series_text}</b>\n📚 الدرس: <b>{lecture}</b>\n"
 
 
-def get_series(series: Series, page: int = 1) -> Tuple[str, InlineKeyboardMarkup]:
-    text = "*السلاسل المتوفرة*"
+def get_data(
+    data: Series, data_column_id: str, page: int = 1
+) -> Tuple[str, InlineKeyboardMarkup]:
+    text = "*اختر ما تريد من القائمة:*"
     paginator = InlineKeyboardPaginator(
-        round(len(series) / page_size),
+        round(len(data) / page_size),
         current_page=page,
-        data_pattern="list_series#{page}",
+        data_pattern=f"list_{data_column_id}#{page}",
     )
     chunk_start: int = (page - 1) * page_size
-    series_list = series.iloc[chunk_start : chunk_start + page_size]
-    for slug, series_ in series_list.iteritems():
+    data_list = data.iloc[chunk_start : chunk_start + page_size]
+    for slug, item in data_list.iteritems():
         paginator.add_before(
-            InlineKeyboardButton(series_.item(), callback_data=f"gets|{slug}")
+            InlineKeyboardButton(
+                item.item(), callback_data=f"load_{data_column_id}|{slug}"
+            )
         )
     return text, paginator.markup
 
 
 @tg_exceptions_handler
 @add_new_chat_to_db
-def series_command_handler(update: Update, _: CallbackContext) -> None:
-    text, reply_markup = get_series(sheet.series)
+def data_command_handler(
+    update: Update, _: CallbackContext, data_column_id: str = "series"
+) -> None:
+    text, reply_markup = get_data(getattr(sheet, data_column_id), data_column_id)
     update.message.reply_text(text, reply_markup=reply_markup)
 
 
 @tg_exceptions_handler
-def series_callback_handler(update: Update, _: CallbackContext) -> None:
+def data_callback_handler(update: Update, _: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
-    current_page = 1
+    data_column_id = query.data.split("_")[-1].split("#")[0]
     current_page_callback_value = query.data.split("#")[1]
-    if current_page_callback_value:
-        current_page = int(current_page_callback_value)
-    text, reply_markup = get_series(sheet.series, page=current_page)
+    current_page = (
+        int(current_page_callback_value) if current_page_callback_value else 1
+    )
+    text, reply_markup = get_data(
+        getattr(sheet, data_column_id), data_column_id, page=current_page
+    )
     query.edit_message_text(
         text=text,
         reply_markup=reply_markup,
@@ -67,45 +85,54 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
     # get series query
-    if "|" in query.data:
-        series_slug = query.data.split("|")[1]
-        page_idx = 1
-    else:
-        # lecture query
-        series_slug = query.data.split("#")[0]
+    query_data, slug = query.data.split("|")
+    data_column_id = query_data.split("_")[-1]
+    if "#" in query.data:
         page_idx = int(query.data.split("#")[1])
-    series: DataFrame = sheet.df[sheet.df.slug == series_slug]
-    item: Series = series.iloc[page_idx - 1, :]
+        slug = slug.split("#")[0]
+    else:
+        page_idx = 1
+    data: DataFrame = sheet.df[getattr(sheet.df, f"{data_column_id}_slug") == slug]
+    if data.empty:
+        query.edit_message_text(
+            text="حدث خطأ في جلب البيانات المطلوبة",
+            reply_markup=InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "رجوع", callback_data=f"list_{data_column_id}#"
+                        )
+                    ]
+                ]
+            ),
+        )
+        return
+    if data_column_id != "series":
+        # Handle author/category
+        series_data: Series = data.groupby(f"series_slug")["series"].unique()
+        text, reply_markup = get_data(series_data, data_column_id, page=page_idx)
+        query.edit_message_text(
+            text=text,
+            reply_markup=reply_markup,
+        )
+        return
+    # Handle series
+    item: Series = data.iloc[page_idx - 1, :]
     paginator = InlineKeyboardPaginator(
-        len(series), current_page=page_idx, data_pattern=series_slug + "#{page}"
+        len(data),
+        current_page=page_idx,
+        data_pattern=f"load_{data_column_id}|{slug}#{{page}}",
     )
     buttons = []
-    if item.book:
-        buttons.append(
-            InlineKeyboardButton("📕 الكتاب", callback_data=f"getd|book|{item.id}")
-        )
-    if item.main:
-        buttons.append(
-            InlineKeyboardButton("📝 المحاور", callback_data=f"getd|main|{item.id}")
-        )
-    if item.video:
-        buttons.append(
-            InlineKeyboardButton("🎞 فيديو", callback_data=f"getd|video|{item.id}")
-        )
-    if item.voice:
-        buttons.append(
-            InlineKeyboardButton("🎧 صوتي", callback_data=f"getd|voice|{item.id}")
-        )
-    if item.text:
-        buttons.append(
-            InlineKeyboardButton("📄 تفريغ", callback_data=f"getd|text|{item.id}")
-        )
-    if item.summary:
-        buttons.append(
-            InlineKeyboardButton("📎 ملخص", callback_data=f"getd|summary|{item.id}")
-        )
+    for component, name in lecture_components.items():
+        if getattr(item, component):
+            buttons.append(
+                InlineKeyboardButton(name, callback_data=f"getd|{component}|{item.id}")
+            )
     paginator.add_before(*buttons)
-    paginator.add_after(InlineKeyboardButton("رجوع", callback_data="list_series#"))
+    paginator.add_after(
+        InlineKeyboardButton("رجوع", callback_data=f"list_{data_column_id}#")
+    )
     query.edit_message_text(
         text=get_lecture_message_text(item),
         reply_markup=paginator.markup,
@@ -173,15 +200,21 @@ def get_lecture_callback_handler(
 
 
 # series
-dispatcher.add_handler(
-    MessageHandler(Filters.regex("^السلاسل العلمية$"), series_command_handler)
-)
-dispatcher.add_handler(
-    CallbackQueryHandler(series_callback_handler, pattern=r"^list_series#")
-)
-# lectures
-dispatcher.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^gets\|"))
-dispatcher.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^[\w_]+#"))
+for _data_column_id, _data_column_name in DATA_COLUMNS.items():
+    dispatcher.add_handler(
+        MessageHandler(
+            Filters.regex(_data_column_name),
+            partial(data_command_handler, data_column_id=_data_column_id),
+        )
+    )
+    dispatcher.add_handler(
+        CallbackQueryHandler(data_callback_handler, pattern=r"^list_[\w]+#")
+    )
+    # lectures
+    dispatcher.add_handler(
+        CallbackQueryHandler(droos_handler, pattern=r"^load_[\w]+\|")
+    )
+    dispatcher.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^[\w_]+#"))
 dispatcher.add_handler(
     CallbackQueryHandler(get_lecture_callback_handler, pattern=r"^getd\|")
 )

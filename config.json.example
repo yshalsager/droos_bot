@@ -7,5 +7,8 @@
     "tg_api_hash": "00000000000000000000000000",
     "sheet_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "sheet_name": "sheet",
+    "data_columns": {
+        "series": "السلاسل العلمية"
+    }
     "links_regex": ""
 }

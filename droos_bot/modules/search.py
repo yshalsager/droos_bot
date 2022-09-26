@@ -13,7 +13,7 @@ from telegram.ext import (
 )
 
 from droos_bot import dispatcher, sheet
-from droos_bot.modules.droos import get_series
+from droos_bot.modules.droos import get_data
 from droos_bot.utils.keyboards import cancel_search_keyboard, main_keyboard
 from droos_bot.utils.telegram import tg_exceptions_handler
 
@@ -37,7 +37,7 @@ def search_for_text(update: Update, _: CallbackContext) -> Optional[int]:
     search_text = update.effective_message.text.strip()
     match = (
         sheet.df[sheet.df.series.str.contains(search_text)]
-        .groupby("slug")["series"]
+        .groupby("series_slug")["series"]
         .unique()
     )
     if match.empty:
@@ -46,7 +46,7 @@ def search_for_text(update: Update, _: CallbackContext) -> Optional[int]:
         )
         return None
 
-    text, reply_markup = get_series(match)
+    text, reply_markup = get_data(match, "series")
     update.message.reply_text(
         text,
         reply_markup=reply_markup,

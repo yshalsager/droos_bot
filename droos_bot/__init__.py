@@ -4,6 +4,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from sys import stderr, stdout
+from typing import Dict
 
 from telegram import ParseMode
 from telegram.ext import Defaults, Dispatcher, PicklePersistence, Updater
@@ -18,6 +19,7 @@ PARENT_DIR = WORK_DIR.parent
 CONFIG = json.loads((PARENT_DIR / "config.json").read_text(encoding="utf-8"))
 BOT_TOKEN = CONFIG["tg_bot_token"]
 TG_BOT_ADMINS = CONFIG["tg_bot_admins"]
+DATA_COLUMNS: Dict[str, str] = CONFIG["data_columns"]
 
 # Logging
 LOG_FILE = PARENT_DIR / "last_run.log"
@@ -47,5 +49,8 @@ updater: Updater = Updater(
 )
 dispatcher: Dispatcher = updater.dispatcher  # type: ignore
 sheet = Spreadsheet(
-    f"{PARENT_DIR}/service_account.json", CONFIG["sheet_id"], CONFIG["sheet_name"]
+    f"{PARENT_DIR}/service_account.json",
+    CONFIG["sheet_id"],
+    CONFIG["sheet_name"],
+    DATA_COLUMNS,
 )

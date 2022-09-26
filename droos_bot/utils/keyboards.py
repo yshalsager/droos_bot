@@ -1,9 +1,11 @@
 from telegram import ReplyKeyboardMarkup
 
+from droos_bot import DATA_COLUMNS
+
 main_keyboard = ReplyKeyboardMarkup(
     [
-        ["البحث عن سلسلة", "السلاسل العلمية"],
-        ["التواصل والاقتراحات", "إرسال مواد"],
+        list(reversed([i for i in DATA_COLUMNS.values()])),
+        ["إرسال مواد", "التواصل والاقتراحات", "البحث عن سلسلة"],
     ]
 )
 cancel_search_keyboard = ReplyKeyboardMarkup([["إلغاء البحث"]])

@@ -1,14 +1,21 @@
 import logging
 from pathlib import Path
+from typing import Dict
 
 from gspread_pandas import Client, Spread, conf
-from pandas import DataFrame, Series
+from pandas import DataFrame
 
 logger = logging.getLogger(__name__)
 
 
 class Spreadsheet:
-    def __init__(self, service_account: str, sheet_id: str, sheet_name: str) -> None:
+    def __init__(
+        self,
+        service_account: str,
+        sheet_id: str,
+        sheet_name: str,
+        data_columns: Dict[str, str],
+    ) -> None:
         self._client: Client = Client(
             config=conf.get_config(
                 conf_dir=str(Path(service_account).parent), file_name=service_account
@@ -20,7 +27,15 @@ class Spreadsheet:
         # self.df = self.worksheet.sheet_to_df()
         self.df: DataFrame = self.worksheet.sheet_to_df().iloc[1:]
         # self.series = self.df.series.unique().tolist()
-        self.series: Series = self.df.groupby("slug")["series"].unique()
+        # self.series: Series = self.df.groupby("slug")["series"].unique()
+        self.data_columns = []
+        for data_column_id, _ in data_columns.items():
+            self.data_columns.append(data_column_id)
+            setattr(
+                self,
+                data_column_id,
+                self.df.groupby(f"{data_column_id}_slug")[data_column_id].unique(),
+            )
 
     #
     # def __len__(self):
