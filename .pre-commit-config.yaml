@@ -1,34 +1,44 @@
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-builtin-literals
+      - id: trailing-whitespace
+        exclude_types:
+          - "markdown"
+      - id: end-of-file-fixer
+      - id: check-toml
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: requirements-txt-fixer
+
+  - repo: https://github.com/psf/black
+    rev: 22.8.0
+    hooks:
+      - id: black
+        args: [ --config=pyproject.toml ]
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.2
+    hooks:
+      - id: flake8
+
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v2.1.1
+    hooks:
+      - id: pycln
+        args: [ --config=pyproject.toml ]
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        files: "\\.(py)$"
+        args: [ --settings-path=pyproject.toml ]
+
   - repo: local
     hooks:
-      - id: system
-        name: Requirements
-        entry: poetry export --format=requirements.txt --without-hashes --extras "links_to_ids" --output=requirements.txt
-        pass_filenames: false
-        language: system
-
-      - id: isort
-        name: isort
-        stages: [ commit ]
-        language: system
-        entry: poetry run isort
-        types: [ python ]
-
-      - id: black
-        name: black
-        stages: [ commit ]
-        language: system
-        entry: poetry run black
-        types: [ python ]
-
-      - id: flake8
-        name: flake8
-        stages: [ commit ]
-        language: system
-        entry: poetry run flake8
-        types: [ python ]
-        exclude: setup.py
-
       - id: mypy
         name: mypy
         stages: [ commit ]
@@ -37,3 +47,8 @@ repos:
         types: [ python ]
         pass_filenames: false
 
+      - id: requirements
+        name: Requirements
+        entry: poetry export --format=requirements.txt --without-hashes --extras "links_to_ids" --output=requirements.txt
+        pass_filenames: false
+        language: system
