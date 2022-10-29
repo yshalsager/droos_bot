@@ -205,7 +205,7 @@ docs = ["Sphinx"]
 
 [[package]]
 name = "gspread"
-version = "5.6.0"
+version = "5.6.2"
 description = "Google Spreadsheets Python API"
 category = "main"
 optional = false
@@ -713,7 +713,7 @@ links-to-ids = ["Pyrogram", "TgCrypto", "convopyro"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "db8b8543394c23cd49bdb9a5f7a5bc92e65b9a37a30c9e261922c8c90613bd08"
+content-hash = "b2d112769fcb1a9eea99f9cbf050f58caf74f1127653162a1ce5cf1c687f9c0e"
 
 [metadata.files]
 APScheduler = [
@@ -849,8 +849,8 @@ greenlet = [
     {file = "greenlet-1.1.3.tar.gz", hash = "sha256:bcb6c6dd1d6be6d38d6db283747d07fda089ff8c559a835236560a4410340455"},
 ]
 gspread = [
-    {file = "gspread-5.6.0-py3-none-any.whl", hash = "sha256:0fe52bec73cc232abadfbc2a999e30201bc5cb0c2728ec00fcfdf38f6f669375"},
-    {file = "gspread-5.6.0.tar.gz", hash = "sha256:9fca855173fdb2e648b3da9e7bbffb83601bfd7c7131d44fa781df84c689e7fc"},
+    {file = "gspread-5.6.2-py3-none-any.whl", hash = "sha256:41f7a416425f1ec5a1b677f49b8fbf599102766c27ed7be6601a58c9a1550ebc"},
+    {file = "gspread-5.6.2.tar.gz", hash = "sha256:d3bbff4b7aad0fc2c986458e148537a02fe7b46e7162f41f3a42392bfa2adb89"},
 ]
 gspread-pandas = [
     {file = "gspread-pandas-3.2.2.tar.gz", hash = "sha256:72371ff295411f24acbed85026abbd0641c098f5c62c8454147feed71ec4850e"},
