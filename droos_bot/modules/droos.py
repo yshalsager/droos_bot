@@ -43,7 +43,7 @@ def get_data(
     )
     chunk_start: int = (page - 1) * page_size
     data_list = data.iloc[chunk_start : chunk_start + page_size]
-    for slug, item in data_list.iteritems():
+    for slug, item in data_list.items():
         paginator.add_before(
             InlineKeyboardButton(
                 item.item(), callback_data=f"load_{data_column_id}|{slug}"

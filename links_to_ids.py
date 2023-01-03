@@ -31,7 +31,10 @@ async def main() -> None:
     :return:
     """
     sheet = Spreadsheet(
-        f"{work_dir}/service_account_rw.json", config["sheet_id"], config["sheet_name"]
+        f"{work_dir}/service_account_rw.json",
+        config["sheet_id"],
+        config["sheet_name"],
+        config["data_columns"],
     )
     telegram_links: List[Cell] = sheet.worksheet.sheet.findall(
         re.compile(config["links_regex"])
@@ -48,13 +51,17 @@ async def main() -> None:
         if not message.media:
             message_type = "text"
         else:
-            media: Union[Photo, Audio, Video, Voice, Document] = getattr(
-                message, str(message.media), None
+            message_type = (
+                message.media.value
+                if hasattr(message, "media") and hasattr(message.media, "value")
+                else None
             )
-            if not media or not hasattr(media, "file_id"):
+            media: Union[Photo, Audio, Video, Voice, Document] = getattr(
+                message, message_type, None
+            )
+            if not message_type or not media or not hasattr(media, "file_id"):
                 print(f"{link}: can't get media!")
                 continue
-            message_type = str(message.media)
         await telegram_client.copy_message(
             chat_id=config["tg_bot_username"],
             from_chat_id=message.chat.id,
