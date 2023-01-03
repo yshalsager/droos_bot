@@ -38,7 +38,7 @@ def stats(update: Update, _: CallbackContext) -> None:
     if top_series:
         for series in top_series:
             try:
-                top_series_message += f"  `{sheet.df[sheet.df.slug == series.id].iloc[0].series}`: {str(series.requests)} مرة\n"
+                top_series_message += f"  `{sheet.df[sheet.df.series_slug == series.id].iloc[0].series}`: {str(series.requests)} مرة\n"
             except IndexError:
                 continue
     top_lectures_message = ""

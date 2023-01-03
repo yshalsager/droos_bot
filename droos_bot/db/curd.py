@@ -11,12 +11,14 @@ from droos_bot.db.session import session
 
 def increment_series_requests(series_info: DataFrame) -> None:
     series: Series = (
-        session.query(Series).filter(Series.id == series_info.slug.item()).first()
+        session.query(Series)
+        .filter(Series.id == series_info.series_slug.item())
+        .first()
     )
     if series:
         series.requests += 1
     else:
-        session.add(Series(id=series_info.slug.item(), requests=1))
+        session.add(Series(id=series_info.series_slug.item(), requests=1))
     session.commit()
 
 
