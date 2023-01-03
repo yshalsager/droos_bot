@@ -110,7 +110,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     if data_column_id != "series":
         # Handle author/category
         series_data: Series = data.groupby(f"series_slug")["series"].unique()
-        text, reply_markup = get_data(series_data, data_column_id, page=page_idx)
+        text, reply_markup = get_data(series_data, "series", page=page_idx)
         query.edit_message_text(
             text=text,
             reply_markup=reply_markup,
