@@ -9,6 +9,8 @@
     "sheet_name": "sheet",
     "data_columns": {
         "series": "السلاسل العلمية"
-    }
+    },
+    "hide": [],
+    "disable": ["إرسال مواد"]
     "links_regex": ""
 }
