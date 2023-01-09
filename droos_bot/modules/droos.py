@@ -39,7 +39,7 @@ def get_data(
     paginator = InlineKeyboardPaginator(
         round(len(data) / page_size),
         current_page=page,
-        data_pattern=f"list_{data_column_id}#{page}",
+        data_pattern=f"list_{data_column_id}#{{page}}",
     )
     chunk_start: int = (page - 1) * page_size
     data_list = data.iloc[chunk_start : chunk_start + page_size]
