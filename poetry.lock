@@ -150,7 +150,7 @@ name = "convopyro"
 version = "0.3"
 description = "A conversation plugin class for pyrogram using inbuild Update Handlers"
 category = "main"
-optional = true
+optional = false
 python-versions = ">=3.6"
 files = []
 develop = false
@@ -723,14 +723,14 @@ files = [
 
 [[package]]
 name = "pyrogram"
-version = "2.0.96"
+version = "2.0.97"
 description = "Elegant, modern and asynchronous Telegram MTProto API framework in Python for users and bots"
 category = "main"
 optional = true
 python-versions = "~=3.7"
 files = [
-    {file = "Pyrogram-2.0.96-py3-none-any.whl", hash = "sha256:0320a9cc8657be77734c1786dac3a0c7e0848b30f475b87e3634200b05f006fa"},
-    {file = "Pyrogram-2.0.96.tar.gz", hash = "sha256:ebf64cd1e6fdb2f6fd15cb685b8aa3792b92ae479cdeda99e6877a1144e485c5"},
+    {file = "Pyrogram-2.0.97-py3-none-any.whl", hash = "sha256:9c5dbd323da2b7cba769bdc4a650044d017eba42b52c035d83902a67d5676ce7"},
+    {file = "Pyrogram-2.0.97.tar.gz", hash = "sha256:e1a0d4a1968425c737b552a9f3c1b2ee18187813bf3285175d87b9ec5e8bc110"},
 ]
 
 [package.dependencies]
@@ -1254,4 +1254,4 @@ links-to-ids = ["Pyrogram", "TgCrypto", "convopyro"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "ad06fe460e4fc11487a8993daf25bf15abb7d6b4911320f070bed76391367ab1"
+content-hash = "76b23e63eaec8f986f70fccb4462da90b80254eac0470e3dfe72fc4b29a37c9f"
