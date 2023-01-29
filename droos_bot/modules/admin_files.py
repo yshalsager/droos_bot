@@ -6,26 +6,27 @@ from telegram import Audio, Document, Update, Video, Voice
 from telegram.ext import (
     CallbackContext,
     CommandHandler,
+    ContextTypes,
     ConversationHandler,
-    Filters,
     MessageHandler,
+    filters,
 )
 
-from droos_bot import dispatcher
+from droos_bot import application
 from droos_bot.utils.filters import FilterBotAdmin
 
 START_RECEIVING = 1
 
 
-def start_receiving(_: Update, __: CallbackContext) -> int:
+async def start_receiving(_: Update, __: CallbackContext) -> int:
     return START_RECEIVING
 
 
-def stop_receiving(_: Update, __: CallbackContext) -> int:
+async def stop_receiving(_: Update, __: CallbackContext) -> int:
     return ConversationHandler.END
 
 
-def files_receiver(update: Update, _: CallbackContext) -> None:
+async def files_receiver(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends explanation on how to use the bot."""
     assert update.effective_message is not None
     if not isinstance(
@@ -42,7 +43,7 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
         message = f"`{file_id}`Ͱ"
         if update.effective_message.caption_html_urled:
             message += f"`{update.effective_message.caption_html_urled}`"
-    update.effective_message.reply_text(
+    await update.effective_message.reply_text(
         message,
     )
 
@@ -50,11 +51,11 @@ def files_receiver(update: Update, _: CallbackContext) -> None:
 filter_bot_admin = FilterBotAdmin()
 
 admin_conversation_handler = ConversationHandler(
-    entry_points=[MessageHandler(Filters.regex("^/receive$"), start_receiving)],
+    entry_points=[MessageHandler(filters.Regex("^/receive$"), start_receiving)],
     states={
         START_RECEIVING: [
             MessageHandler(
-                ~Filters.command & filter_bot_admin & Filters.chat_type.private,
+                ~filters.COMMAND & filter_bot_admin & filters.ChatType.PRIVATE,
                 files_receiver,
             )
         ],
@@ -63,4 +64,4 @@ admin_conversation_handler = ConversationHandler(
         CommandHandler("done", stop_receiving),
     ],
 )
-dispatcher.add_handler(admin_conversation_handler)
+application.add_handler(admin_conversation_handler)

@@ -3,7 +3,7 @@ from telegram import ReplyKeyboardMarkup
 from droos_bot import CONFIG, DATA_COLUMNS
 
 
-def create_main_keyboard():
+def create_main_keyboard() -> list[list[str]]:
     data_values = [
         [value]
         for key, value in DATA_COLUMNS.items()

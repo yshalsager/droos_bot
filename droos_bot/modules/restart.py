@@ -5,15 +5,15 @@ from pathlib import Path
 from sys import executable
 
 from telegram import Update
-from telegram.ext import CallbackContext, CommandHandler
+from telegram.ext import CommandHandler, ContextTypes
 
-from droos_bot import PARENT_DIR, dispatcher
+from droos_bot import PARENT_DIR, application
 from droos_bot.utils.filters import FilterBotAdmin
 
 
-def restart(update: Update, _: CallbackContext) -> None:
+async def restart(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """restarts the bot."""
-    restart_message = update.message.reply_text(
+    restart_message = await update.message.reply_text(
         "`Restarting, please wait...`",
     )
     chat_info = {"chat": restart_message.chat_id, "message": restart_message.message_id}
@@ -22,4 +22,4 @@ def restart(update: Update, _: CallbackContext) -> None:
 
 
 filter_bot_admin = FilterBotAdmin()
-dispatcher.add_handler(CommandHandler("restart", restart, filter_bot_admin))
+application.add_handler(CommandHandler("restart", restart, filter_bot_admin))

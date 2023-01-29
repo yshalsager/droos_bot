@@ -16,15 +16,15 @@ Pyrogram = { version = "^2.0.97", optional = true }
 TgCrypto = { version = "^1.2.5", optional = true }
 convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", branch = "main", optional = true }
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.extras]
+links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
+
+[tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
 pre-commit = "^3.0.1"
 isort = "^5.11.4"
 mypy = "^0.991"
 flake8 = "^6.0.0"
-
-[tool.poetry.extras]
-links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -55,3 +55,4 @@ show_error_codes = true
 warn_unused_ignores = true
 disallow_incomplete_defs = true
 disallow_untyped_decorators = true
+plugins = ["sqlalchemy.ext.mypy.plugin"]

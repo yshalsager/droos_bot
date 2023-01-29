@@ -2,10 +2,11 @@
 from typing import List
 
 from pandas import DataFrame
-from telegram import ParseMode, Update
-from telegram.ext import CallbackContext, CommandHandler
+from telegram import Update
+from telegram.constants import ParseMode
+from telegram.ext import CommandHandler, ContextTypes
 
-from droos_bot import dispatcher, sheet
+from droos_bot import application, sheet
 from droos_bot.db import Lecture, Series
 from droos_bot.db.curd import (
     get_chats_count,
@@ -16,8 +17,8 @@ from droos_bot.db.curd import (
 from droos_bot.utils.filters import FilterBotAdmin
 
 
-def stats(update: Update, _: CallbackContext) -> None:
-    stats_message = update.message.reply_text("جاري تحضير الإحصائيات…")
+async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    stats_message = await update.message.reply_text("جاري تحضير الإحصائيات…")
     all_chats, active_chats = get_chats_count()
     usage_times, series_requests, lecture_requests = get_usage_count()
     top_series: List[Series] = get_top_series()
@@ -53,8 +54,8 @@ def stats(update: Update, _: CallbackContext) -> None:
         "$top_lectures", top_lectures_message
     )
 
-    stats_message.edit_text(message, parse_mode=ParseMode.MARKDOWN_V2)
+    await stats_message.edit_text(message, parse_mode=ParseMode.MARKDOWN_V2)
 
 
 filter_bot_admin = FilterBotAdmin()
-dispatcher.add_handler(CommandHandler("stats", stats, filter_bot_admin))
+application.add_handler(CommandHandler("stats", stats, filter_bot_admin))

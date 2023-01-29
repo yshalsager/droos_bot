@@ -5,11 +5,18 @@ from functools import partial
 from typing import Optional, Tuple, Union
 
 from pandas import DataFrame, Series
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
-from telegram.ext import CallbackContext, CallbackQueryHandler, Filters, MessageHandler
+from telegram import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.constants import ParseMode
+from telegram.ext import (
+    CallbackContext,
+    CallbackQueryHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
 from telegram_bot_pagination import InlineKeyboardPaginator
 
-from droos_bot import DATA_COLUMNS, dispatcher, sheet
+from droos_bot import DATA_COLUMNS, application, sheet
 from droos_bot.utils.analytics import add_new_chat_to_db, analysis
 from droos_bot.utils.telegram import tg_exceptions_handler
 
@@ -54,17 +61,17 @@ def get_data(
 
 @tg_exceptions_handler
 @add_new_chat_to_db
-def data_command_handler(
+async def data_command_handler(
     update: Update, _: CallbackContext, data_column_id: str = "series"
 ) -> None:
     text, reply_markup = get_data(getattr(sheet, data_column_id), data_column_id)
-    update.message.reply_text(text, reply_markup=reply_markup)
+    await update.message.reply_text(text, reply_markup=reply_markup)
 
 
 @tg_exceptions_handler
-def data_callback_handler(update: Update, _: CallbackContext) -> None:
-    query = update.callback_query
-    query.answer()
+async def data_callback_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
+    query: CallbackQuery = update.callback_query
+    await query.answer()
     data_column_id = query.data.split("_")[-1].split("#")[0]
     current_page_callback_value = query.data.split("#")[1]
     current_page = (
@@ -73,17 +80,17 @@ def data_callback_handler(update: Update, _: CallbackContext) -> None:
     text, reply_markup = get_data(
         getattr(sheet, data_column_id), data_column_id, page=current_page
     )
-    query.edit_message_text(
+    await query.edit_message_text(
         text=text,
         reply_markup=reply_markup,
     )
 
 
 @tg_exceptions_handler
-def droos_handler(update: Update, _: CallbackContext) -> None:
+async def droos_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Sends Droos list."""
-    query = update.callback_query
-    query.answer()
+    query: CallbackQuery = update.callback_query
+    await query.answer()
     # get series query
     query_data, slug = query.data.split("|")
     data_column_id = query_data.split("_")[-1]
@@ -94,7 +101,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
         page_idx = 1
     data: DataFrame = sheet.df[getattr(sheet.df, f"{data_column_id}_slug") == slug]
     if data.empty:
-        query.edit_message_text(
+        await query.edit_message_text(
             text="حدث خطأ في جلب البيانات المطلوبة",
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -111,7 +118,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
         # Handle author/category
         series_data: Series = data.groupby(f"series_slug")["series"].unique()
         text, reply_markup = get_data(series_data, "series", page=page_idx)
-        query.edit_message_text(
+        await query.edit_message_text(
             text=text,
             reply_markup=reply_markup,
         )
@@ -133,7 +140,7 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
     paginator.add_after(
         InlineKeyboardButton("رجوع", callback_data=f"list_{data_column_id}#")
     )
-    query.edit_message_text(
+    await query.edit_message_text(
         text=get_lecture_message_text(item),
         reply_markup=paginator.markup,
         parse_mode=ParseMode.HTML,
@@ -142,11 +149,11 @@ def droos_handler(update: Update, _: CallbackContext) -> None:
 
 @tg_exceptions_handler
 @analysis
-def get_lecture_callback_handler(
+async def get_lecture_callback_handler(
     update: Update, _: CallbackContext
 ) -> Optional[Series]:
     query = update.callback_query
-    query.answer()
+    await query.answer()
     __, data, lecture_id = query.data.split("|")
     lecture_info = sheet.df[sheet.df.id == lecture_id]
     if lecture_info.empty or getattr(lecture_info, data).empty:
@@ -156,41 +163,41 @@ def get_lecture_callback_handler(
     file_id, caption = info.split("Ͱ")
     text = caption if caption else get_lecture_message_text(lecture_info)
     if media_type == "text":
-        dispatcher.bot.send_message(
+        await application.bot.send_message(
             chat_id=query.message.chat_id,
             text=caption,
             parse_mode=ParseMode.HTML,
         )
     if media_type == "video":
-        dispatcher.bot.send_video(
+        await application.bot.send_video(
             chat_id=query.message.chat_id,
             video=file_id,
             caption=text,
             parse_mode=ParseMode.HTML,
         )
     elif media_type == "audio":
-        dispatcher.bot.send_audio(
+        await application.bot.send_audio(
             chat_id=query.message.chat_id,
             audio=file_id,
             caption=text,
             parse_mode=ParseMode.HTML,
         )
     elif media_type == "voice":
-        dispatcher.bot.send_voice(
+        await application.bot.send_voice(
             chat_id=query.message.chat_id,
             voice=file_id,
             caption=text,
             parse_mode=ParseMode.HTML,
         )
     elif media_type == "document":
-        dispatcher.bot.send_document(
+        await application.bot.send_document(
             chat_id=query.message.chat_id,
             document=file_id,
             caption=text,
             parse_mode=ParseMode.HTML,
         )
     elif media_type == "photo":
-        dispatcher.bot.send_photo(
+        await application.bot.send_photo(
             chat_id=query.message.chat_id,
             photo=file_id,
             caption=text,
@@ -201,20 +208,20 @@ def get_lecture_callback_handler(
 
 # series
 for _data_column_id, _data_column_name in DATA_COLUMNS.items():
-    dispatcher.add_handler(
+    application.add_handler(
         MessageHandler(
-            Filters.regex(_data_column_name),
+            filters.Regex(_data_column_name),
             partial(data_command_handler, data_column_id=_data_column_id),
         )
     )
-    dispatcher.add_handler(
+    application.add_handler(
         CallbackQueryHandler(data_callback_handler, pattern=r"^list_[\w]+#")
     )
     # lectures
-    dispatcher.add_handler(
+    application.add_handler(
         CallbackQueryHandler(droos_handler, pattern=r"^load_[\w]+\|")
     )
-    dispatcher.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^[\w_]+#"))
-dispatcher.add_handler(
+    application.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^[\w_]+#"))
+application.add_handler(
     CallbackQueryHandler(get_lecture_callback_handler, pattern=r"^getd\|")
 )

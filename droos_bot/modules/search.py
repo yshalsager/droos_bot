@@ -5,14 +5,14 @@ from typing import Optional
 
 from telegram import Update
 from telegram.ext import (
-    CallbackContext,
     CommandHandler,
+    ContextTypes,
     ConversationHandler,
-    Filters,
     MessageHandler,
+    filters,
 )
 
-from droos_bot import dispatcher, sheet
+from droos_bot import application, sheet
 from droos_bot.modules.droos import get_data
 from droos_bot.utils.keyboards import cancel_search_keyboard, main_keyboard
 from droos_bot.utils.telegram import tg_exceptions_handler
@@ -21,9 +21,9 @@ START_SEARCH = 0
 
 
 @tg_exceptions_handler
-def search_handler(update: Update, _: CallbackContext) -> int:
+async def search_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     assert update.effective_message is not None
-    update.message.reply_text(
+    await update.message.reply_text(
         "اكتب ما تريد البحث عنه",
         reply_to_message_id=update.effective_message.message_id,
         reply_markup=cancel_search_keyboard,
@@ -32,7 +32,9 @@ def search_handler(update: Update, _: CallbackContext) -> int:
 
 
 @tg_exceptions_handler
-def search_for_text(update: Update, _: CallbackContext) -> Optional[int]:
+async def search_for_text(
+    update: Update, _: ContextTypes.DEFAULT_TYPE
+) -> Optional[int]:
     assert update.effective_message is not None
     search_text = update.effective_message.text.strip()
     match = (
@@ -41,23 +43,23 @@ def search_for_text(update: Update, _: CallbackContext) -> Optional[int]:
         .unique()
     )
     if match.empty:
-        update.message.reply_text(
+        await update.message.reply_text(
             "لا يوجد نتائج", reply_to_message_id=update.effective_message.message_id
         )
         return None
 
     text, reply_markup = get_data(match, "series")
-    update.message.reply_text(
+    await update.message.reply_text(
         text,
         reply_markup=reply_markup,
         reply_to_message_id=update.effective_message.message_id,
     )
-    cancel_search_handler(update, _)
+    await cancel_search_handler(update, _)
     return ConversationHandler.END
 
 
-def cancel_search_handler(update: Update, _: CallbackContext) -> int:
-    update.message.reply_text(
+async def cancel_search_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
+    await update.message.reply_text(
         "يمكنك متابعة استخدام البوت من خلال الأزرار الظاهرة بالأسفل",
         reply_markup=main_keyboard,
     )
@@ -65,15 +67,15 @@ def cancel_search_handler(update: Update, _: CallbackContext) -> int:
 
 
 search_conversation_handler = ConversationHandler(
-    entry_points=[MessageHandler(Filters.regex("^البحث عن سلسلة$"), search_handler)],
+    entry_points=[MessageHandler(filters.Regex("^البحث عن سلسلة$"), search_handler)],
     states={
         START_SEARCH: [
             MessageHandler(
-                Filters.text
+                filters.TEXT
                 & ~(
-                    Filters.command
-                    | Filters.regex("^البحث عن سلسلة$")
-                    | Filters.regex("^إلغاء البحث$")
+                    filters.COMMAND
+                    | filters.Regex("^البحث عن سلسلة$")
+                    | filters.Regex("^إلغاء البحث$")
                 ),
                 search_for_text,
             )
@@ -81,8 +83,8 @@ search_conversation_handler = ConversationHandler(
     },
     fallbacks=[
         CommandHandler("cancel", cancel_search_handler),
-        MessageHandler(Filters.regex("^إلغاء البحث$"), cancel_search_handler),
+        MessageHandler(filters.Regex("^إلغاء البحث$"), cancel_search_handler),
     ],
 )
 
-dispatcher.add_handler(search_conversation_handler)
+application.add_handler(search_conversation_handler)

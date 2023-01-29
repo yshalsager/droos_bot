@@ -1,16 +1,17 @@
 """
 Feedback and files handler module.
 """
-from telegram import MAX_MESSAGE_LENGTH, ParseMode, Update
+from telegram import Update
+from telegram.constants import MessageLimit, ParseMode
 from telegram.ext import (
-    CallbackContext,
     CommandHandler,
+    ContextTypes,
     ConversationHandler,
-    Filters,
     MessageHandler,
+    filters,
 )
 
-from droos_bot import CONFIG, dispatcher
+from droos_bot import CONFIG, application
 from droos_bot.modules.search import cancel_search_handler
 from droos_bot.utils.filters import FeedbackMessageFilter, FilterBotAdmin
 from droos_bot.utils.keyboards import cancel_keyboard
@@ -26,10 +27,10 @@ notice_message = (
 
 
 @tg_exceptions_handler
-def feedback_handler(update: Update, _: CallbackContext) -> int:
+async def feedback_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle feedback from users."""
     assert update.effective_message is not None
-    update.message.reply_text(
+    await update.message.reply_text(
         "يمكنك كتابة ما تريد إرساله للمشرفين على البوت هنا\n" + notice_message,
         reply_to_message_id=update.effective_message.message_id,
         reply_markup=cancel_keyboard,
@@ -38,24 +39,24 @@ def feedback_handler(update: Update, _: CallbackContext) -> int:
 
 
 @tg_exceptions_handler
-def forward_feedback(update: Update, context: CallbackContext) -> None:
+async def forward_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     assert update.effective_message is not None
     assert update.effective_chat is not None
-    context.bot.forward_message(
+    await context.bot.forward_message(
         chat_id=CONFIG["tg_feedback_chat_id"],
         from_chat_id=update.effective_chat.id,
         message_id=update.effective_message.message_id,
     )
-    update.message.reply_text(
+    await update.message.reply_text(
         r"تم استلام رسالتك بنجاح\. بإمكانك إرسال المزيد أو الضغط على زر إنهاء للعودة"
     )
 
 
 @tg_exceptions_handler
-def files_handler(update: Update, _: CallbackContext) -> int:
+async def files_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
     """Handle files from users."""
     assert update.effective_message is not None
-    update.message.reply_text(
+    await update.message.reply_text(
         "يمكنك إرسال مواد لإضافتها للبوت هنا\n" + notice_message,
         reply_to_message_id=update.effective_message.message_id,
         reply_markup=cancel_keyboard,
@@ -64,11 +65,11 @@ def files_handler(update: Update, _: CallbackContext) -> int:
 
 
 @tg_exceptions_handler
-def reply_to_feedback(update: Update, context: CallbackContext) -> None:
+async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     assert update.effective_message is not None
     assert update.effective_chat is not None
     if not update.effective_message.reply_to_message.forward_from:
-        update.effective_message.reply_text(
+        await update.effective_message.reply_text(
             "لا يمكن الرد على هذا المستخدم بسبب إعدادات حسابه",
             reply_to_message_id=update.effective_message.message_id,
         )
@@ -77,15 +78,15 @@ def reply_to_feedback(update: Update, context: CallbackContext) -> None:
         update.effective_message.reply_to_message.text_html_urled or ""
     )
     reply_with_message_text = (
-        f"<b>رد المشرف على رسالتك السابقة:</b>\n\n{replied_to_message_text[:MAX_MESSAGE_LENGTH - 150]}\n\n"
+        f"<b>رد المشرف على رسالتك السابقة:</b>\n\n{replied_to_message_text[:MessageLimit.MAX_TEXT_LENGTH - 150]}\n\n"
         f"<b>ملاحظة</b>:\nللرد على هذه الرسالة اضغط على زر التواصل والاقتراحات أولا ثم أرسل الرد"
     )
-    context.bot.send_message(
+    await context.bot.send_message(
         update.effective_message.reply_to_message.forward_from.id,
         reply_with_message_text,
         parse_mode=ParseMode.HTML,
     )
-    context.bot.copy_message(
+    await context.bot.copy_message(
         chat_id=update.effective_message.reply_to_message.forward_from.id,
         from_chat_id=update.effective_chat.id,
         message_id=update.effective_message.message_id,
@@ -96,7 +97,7 @@ def reply_to_feedback(update: Update, context: CallbackContext) -> None:
         f"{update.effective_message.reply_to_message.forward_from.full_name}</a> "
         f'<a href="{update.effective_message.link}">بهذا الرد</a>'
     )
-    update.effective_message.reply_text(
+    await update.effective_message.reply_text(
         admin_message,
         reply_to_message_id=update.effective_message.message_id,
         parse_mode=ParseMode.HTML,
@@ -105,16 +106,16 @@ def reply_to_feedback(update: Update, context: CallbackContext) -> None:
 
 feedback_conversation_handler = ConversationHandler(
     entry_points=[
-        MessageHandler(Filters.regex("^التواصل والاقتراحات$"), feedback_handler)
+        MessageHandler(filters.Regex("^التواصل والاقتراحات$"), feedback_handler)
     ],
     states={
         START_RECEIVING_FEEDBACK: [
             MessageHandler(
-                Filters.text
+                filters.TEXT
                 & ~(
-                    Filters.command
-                    | Filters.regex("^التواصل والاقتراحات$")
-                    | Filters.regex("^إنهاء$")
+                    filters.COMMAND
+                    | filters.Regex("^التواصل والاقتراحات$")
+                    | filters.Regex("^إنهاء$")
                 ),
                 forward_feedback,
             )
@@ -122,33 +123,35 @@ feedback_conversation_handler = ConversationHandler(
     },
     fallbacks=[
         CommandHandler("cancel", cancel_search_handler),
-        MessageHandler(Filters.regex("^إنهاء$"), cancel_search_handler),
+        MessageHandler(filters.Regex("^إنهاء$"), cancel_search_handler),
     ],
 )
 
 files_conversation_handler = ConversationHandler(
-    entry_points=[MessageHandler(Filters.regex("^إرسال مواد$"), files_handler)],
+    entry_points=[MessageHandler(filters.Regex("^إرسال مواد$"), files_handler)],
     states={
         START_RECEIVING_FILES: [
             MessageHandler(
-                Filters.photo | Filters.video | Filters.audio | Filters.document,
+                filters.PHOTO | filters.VIDEO | filters.AUDIO | filters.Document.ALL,
                 forward_feedback,
             )
         ],
     },
     fallbacks=[
         CommandHandler("cancel", cancel_search_handler),
-        MessageHandler(Filters.regex("^إنهاء$"), cancel_search_handler),
+        MessageHandler(filters.Regex("^إنهاء$"), cancel_search_handler),
     ],
 )
 
 if "التواصل والاقتراحات" not in CONFIG.get("disable", []):
-    dispatcher.add_handler(feedback_conversation_handler)
+    application.add_handler(feedback_conversation_handler)
 if "إرسال مواد" not in CONFIG.get("disable", []):
-    dispatcher.add_handler(files_conversation_handler)
+    application.add_handler(files_conversation_handler)
 
 filter_bot_admin = FilterBotAdmin()
-filter_feedback_message = FeedbackMessageFilter(CONFIG["tg_feedback_chat_id"])
-dispatcher.add_handler(
+filter_feedback_message = FeedbackMessageFilter(
+    CONFIG["tg_feedback_chat_id"], CONFIG["tg_bot_token"].split(":")[0]
+)
+application.add_handler(
     MessageHandler(filter_bot_admin & filter_feedback_message, reply_to_feedback)
 )

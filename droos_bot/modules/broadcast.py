@@ -4,10 +4,12 @@ broadcast module.
 import logging
 from time import sleep
 
-from telegram import Message, ParseMode, TelegramError, Update
-from telegram.ext import CallbackContext, CommandHandler, Filters
+from telegram import Message, Update
+from telegram.constants import ParseMode
+from telegram.error import TelegramError
+from telegram.ext import CommandHandler, ContextTypes, filters
 
-from droos_bot import dispatcher
+from droos_bot import application
 from droos_bot.db.curd import get_all_chats
 from droos_bot.utils.filters import FilterBotAdmin
 from droos_bot.utils.telegram import tg_exceptions_handler
@@ -16,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 @tg_exceptions_handler
-def broadcast(update: Update, context: CallbackContext) -> None:
+async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Broadcasts message to bot users."""
     assert update.effective_message is not None
     assert update.effective_chat is not None
@@ -25,7 +27,7 @@ def broadcast(update: Update, context: CallbackContext) -> None:
     sent_successfully = 0
     for chat in get_all_chats():
         try:
-            context.bot.copy_message(
+            await context.bot.copy_message(
                 chat_id=chat.user_id,
                 from_chat_id=message_to_send.chat.id,
                 message_id=message_to_send.message_id,
@@ -43,7 +45,7 @@ def broadcast(update: Update, context: CallbackContext) -> None:
             f" فشل الإرسال إلى {failed_to_send}"
             f"مستخدمين/مجموعات، غالبا بسبب أن البوت طرد أو أوقف."
         )
-    update.effective_message.reply_text(
+    await update.effective_message.reply_text(
         broadcast_status_message,
         reply_to_message_id=update.effective_message.message_id,
         parse_mode=ParseMode.HTML,
@@ -52,6 +54,6 @@ def broadcast(update: Update, context: CallbackContext) -> None:
 
 filter_bot_admin = FilterBotAdmin()
 
-dispatcher.add_handler(
-    CommandHandler("broadcast", broadcast, filters=Filters.reply & filter_bot_admin)
+application.add_handler(
+    CommandHandler("broadcast", broadcast, filters=filters.REPLY & filter_bot_admin)
 )
