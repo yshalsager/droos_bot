@@ -35,8 +35,8 @@ def add_new_chat_to_db(func: F) -> F:
 
 def analysis(func: F) -> F:
     @wraps(func)
-    def wrapper(update: Update, context: CallbackContext) -> None:
-        lecture_info = func(update, context)
+    async def wrapper(update: Update, context: CallbackContext) -> None:
+        lecture_info = await func(update, context)
         assert update.effective_message is not None
         increment_usage(update.effective_message.chat_id)
         increment_series_requests(lecture_info)
