@@ -21,7 +21,7 @@ links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
-pre-commit = "^3.1.1"
+pre-commit = "^3.2.0"
 isort = "^5.11.4"
 mypy = "^1.1"
 flake8 = "^6.0.0"
