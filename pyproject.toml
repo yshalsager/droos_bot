@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-python-telegram-bot = "^20.1"
+python-telegram-bot = "^20.2"
 python-telegram-bot-pagination = "^0.0.2"
 gspread = "^5.7.2"
 gspread-pandas = "^3.2.2"
