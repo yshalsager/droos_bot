@@ -9,7 +9,7 @@ license = "MIT"
 python = "^3.9"
 python-telegram-bot = "^20.2"
 python-telegram-bot-pagination = "^0.0.2"
-gspread = "^5.7.2"
+gspread = "^5.8.0"
 gspread-pandas = "^3.2.2"
 SQLAlchemy = "^2.0.7"
 Pyrogram = { version = "^2.0.102", optional = true }
