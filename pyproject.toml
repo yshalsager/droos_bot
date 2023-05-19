@@ -11,7 +11,7 @@ python-telegram-bot = "^20.3"
 python-telegram-bot-pagination = "^0.0.2"
 gspread = "^5.9.0"
 gspread-pandas = "^3.2.2"
-SQLAlchemy = "^2.0.13"
+SQLAlchemy = "^2.0.14"
 Pyrogram = { version = "^2.0.106", optional = true }
 TgCrypto = { version = "^1.2.5", optional = true }
 convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", branch = "main", optional = true }
