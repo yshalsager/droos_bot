@@ -2,6 +2,7 @@
 Droos handler module.
 """
 from functools import partial
+from math import ceil
 from typing import Optional, Tuple, Union
 
 from pandas import DataFrame, Series
@@ -44,7 +45,7 @@ def get_data(
 ) -> Tuple[str, InlineKeyboardMarkup]:
     text = "*اختر ما تريد من القائمة:*"
     paginator = InlineKeyboardPaginator(
-        round(len(data) / page_size),
+        ceil(len(data) / page_size),
         current_page=page,
         data_pattern=f"list_{data_column_id}#{{page}}",
     )
