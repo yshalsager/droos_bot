@@ -1,4 +1,4 @@
-"""Bot update module"""
+"""Bot update module."""
 
 from telegram import Update
 from telegram.ext import CommandHandler, ContextTypes
@@ -10,7 +10,7 @@ from droos_bot.utils.filters import FilterBotAdmin
 
 
 async def update_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    """update the bot then restart."""
+    """Update the bot then restart."""
     assert update.effective_message is not None
     assert update.effective_chat is not None
     git_output = run_command(

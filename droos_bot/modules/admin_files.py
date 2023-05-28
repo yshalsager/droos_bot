@@ -1,6 +1,5 @@
-"""
-Admin files handler module.
-"""
+"""Admin files handler module."""
+from typing import cast
 
 from telegram import Audio, Document, Update, Video, Voice
 from telegram.ext import (
@@ -23,15 +22,15 @@ async def start_receiving(_: Update, __: CallbackContext) -> int:
 
 
 async def stop_receiving(_: Update, __: CallbackContext) -> int:
-    return ConversationHandler.END
+    return cast(int, ConversationHandler.END)
 
 
 async def files_receiver(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends explanation on how to use the bot."""
+    """Send explanation on how to use the bot."""
     assert update.effective_message is not None
     if not isinstance(
         update.effective_message.effective_attachment,
-        (Document, Audio, Video, Voice, list),
+        Document | Audio | Video | Voice | list,
     ):
         message = f"Ͱ`{update.effective_message.text_html_urled}`"
     else:

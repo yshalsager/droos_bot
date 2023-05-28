@@ -1,6 +1,4 @@
-"""
-Bot custom filters
-"""
+"""Bot custom filters."""
 from telegram import Message
 from telegram.ext.filters import MessageFilter
 
@@ -8,7 +6,7 @@ from droos_bot import TG_BOT_ADMINS
 
 
 class FilterBotAdmin(MessageFilter):
-    def filter(self, message: Message) -> bool:
+    def filter(self, message: Message) -> bool:  # noqa: A003
         return bool(message.from_user and message.from_user.id in TG_BOT_ADMINS)
 
 
@@ -18,7 +16,7 @@ class FeedbackMessageFilter(MessageFilter):
         self.feedback_chat = feedback_chat
         self.bot_id = int(bot_id)
 
-    def filter(self, message: Message) -> bool:
+    def filter(self, message: Message) -> bool:  # noqa: A003
         return bool(
             message.reply_to_message
             and message.reply_to_message.chat_id == self.feedback_chat

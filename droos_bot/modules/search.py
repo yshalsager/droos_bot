@@ -1,7 +1,5 @@
-"""
-Data search module
-"""
-from typing import Optional
+"""Data search module."""
+from typing import cast
 
 from telegram import Update
 from telegram.ext import (
@@ -32,9 +30,7 @@ async def search_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
 
 
 @tg_exceptions_handler
-async def search_for_text(
-    update: Update, _: ContextTypes.DEFAULT_TYPE
-) -> Optional[int]:
+async def search_for_text(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int | None:
     assert update.effective_message is not None
     search_text = update.effective_message.text.strip()
     match = (
@@ -55,7 +51,7 @@ async def search_for_text(
         reply_to_message_id=update.effective_message.message_id,
     )
     await cancel_search_handler(update, _)
-    return ConversationHandler.END
+    return cast(int, ConversationHandler.END)
 
 
 async def cancel_search_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
@@ -63,7 +59,7 @@ async def cancel_search_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) ->
         "يمكنك متابعة استخدام البوت من خلال الأزرار الظاهرة بالأسفل",
         reply_markup=main_keyboard,
     )
-    return ConversationHandler.END
+    return cast(int, ConversationHandler.END)
 
 
 search_conversation_handler = ConversationHandler(

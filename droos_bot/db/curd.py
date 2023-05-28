@@ -1,5 +1,3 @@
-from typing import List, Optional, Tuple
-
 from pandas import DataFrame
 from sqlalchemy import Row
 from sqlalchemy.sql.functions import sum
@@ -11,7 +9,7 @@ from droos_bot.db.session import session
 
 
 def increment_series_requests(series_info: DataFrame) -> None:
-    series: Optional[Series] = (
+    series: Series | None = (
         session.query(Series)
         .filter(Series.id == series_info.series_slug.item())
         .first()
@@ -24,7 +22,7 @@ def increment_series_requests(series_info: DataFrame) -> None:
 
 
 def increment_lecture_requests(lecture_info: DataFrame) -> None:
-    lecture: Optional[Lecture] = (
+    lecture: Lecture | None = (
         session.query(Lecture).filter(Lecture.id == lecture_info.id.item()).first()
     )
     if lecture:
@@ -48,24 +46,24 @@ def increment_usage(user_id: int) -> None:
     session.commit()
 
 
-def get_chats_count() -> Tuple[int, int]:
+def get_chats_count() -> tuple[int, int]:
     all_chats = session.query(Chat).count()
     active_chats = session.query(Chat).filter(Chat.usage_times > 0).count()
     return all_chats, active_chats
 
 
-def get_usage_count() -> Tuple[int, int, int]:
-    usage_times_row: Optional[Row] = session.query(
+def get_usage_count() -> tuple[int, int, int]:
+    usage_times_row: Row | None = session.query(
         sum(Chat.usage_times).label("usage_times")
     ).first()
     usage_times: int = usage_times_row.usage_times if usage_times_row else 0
-    series_requests_row: Optional[Row] = session.query(
+    series_requests_row: Row | None = session.query(
         sum(Series.requests).label("series_requests")
     ).first()
     series_requests: int = (
         series_requests_row.series_requests if series_requests_row else 0
     )
-    lecture_requests_row: Optional[Row] = session.query(
+    lecture_requests_row: Row | None = session.query(
         sum(Lecture.requests).label("lecture_requests")
     ).first()
     lecture_requests: int = (
@@ -74,13 +72,13 @@ def get_usage_count() -> Tuple[int, int, int]:
     return usage_times, series_requests, lecture_requests
 
 
-def get_top_series() -> List[Series]:
+def get_top_series() -> list[Series]:
     return session.query(Series).order_by(Series.requests.desc()).limit(5).all()
 
 
-def get_top_lectures() -> List[Lecture]:
+def get_top_lectures() -> list[Lecture]:
     return session.query(Lecture).order_by(Lecture.requests.desc()).limit(5).all()
 
 
-def get_all_chats() -> List[Chat]:
+def get_all_chats() -> list[Chat]:
     return session.query(Chat).all()

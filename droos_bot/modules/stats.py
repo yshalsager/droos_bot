@@ -1,5 +1,4 @@
-# """ Bot stats module"""
-from typing import List
+"""Bot stats module."""
 
 from pandas import DataFrame
 from telegram import Update
@@ -21,15 +20,15 @@ async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     stats_message = await update.message.reply_text("جاري تحضير الإحصائيات…")
     all_chats, active_chats = get_chats_count()
     usage_times, series_requests, lecture_requests = get_usage_count()
-    top_series: List[Series] = get_top_series()
-    top_lectures: List[Lecture] = get_top_lectures()
+    top_series: list[Series] = get_top_series()
+    top_lectures: list[Lecture] = get_top_lectures()
 
     message = (
-        f"**المستخدمون الحاليون**: {str(active_chats)}\n"
-        f"**كل المستخدمون**: {str(all_chats)}\n"
-        f"**إجمالي مرات الاستخدام**: {str(usage_times)}\n"
-        f"**إجمالي الملفات المرسلة**: {str(series_requests)}\n"
-        f"**إجمالي الدروس المطلوبة**: {str(lecture_requests)}\n\n"
+        f"**المستخدمون الحاليون**: {active_chats!s}\n"
+        f"**كل المستخدمون**: {all_chats!s}\n"
+        f"**إجمالي مرات الاستخدام**: {usage_times!s}\n"
+        f"**إجمالي الملفات المرسلة**: {series_requests!s}\n"
+        f"**إجمالي الدروس المطلوبة**: {lecture_requests!s}\n\n"
         f"**أكثر السلاسل طلبًا**:\n"
         f"$top_series\n"
         f"**أكثر الدروس طلبًا**:\n"

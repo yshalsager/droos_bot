@@ -1,8 +1,9 @@
-import pickle
+import json
+from collections.abc import Callable
 from functools import wraps
 from pathlib import Path
 from time import sleep
-from typing import Any, Callable, TypeVar, cast
+from typing import Any, TypeVar, cast
 
 from telegram import Update
 from telegram.error import BadRequest, Forbidden, RetryAfter
@@ -13,7 +14,7 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 def tg_exceptions_handler(func: F) -> F:
     @wraps(func)
-    def wrapper(*args, **kwargs) -> F:  # type: ignore
+    def wrapper(*args: Any, **kwargs: Any) -> F:  # type: ignore[return]
         try:
             return cast(F, func(*args, **kwargs))
         except BadRequest as err:
@@ -21,6 +22,7 @@ def tg_exceptions_handler(func: F) -> F:
                 pass
             else:
                 raise err
+
         except Forbidden as err:
             if "bot was blocked by the user" in err.message:
                 pass
@@ -47,9 +49,9 @@ def get_chat_type(update: Update) -> int:
 
 async def handle_restart(parent_dir: Path, application: Application) -> None:
     # Restart handler
-    restart_message_path: Path = Path(f"{parent_dir.absolute()}/restart.pickle")
+    restart_message_path: Path = Path(f"{parent_dir.absolute()}/restart.json")
     if restart_message_path.exists():
-        restart_message = pickle.loads(restart_message_path.read_bytes())
+        restart_message = json.loads(restart_message_path.read_text())
         await application.bot.edit_message_text(
             "`Restarted Successfully!`",
             restart_message["chat"],

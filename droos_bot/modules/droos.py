@@ -1,9 +1,6 @@
-"""
-Droos handler module.
-"""
+"""Droos handler module."""
 from functools import partial
 from math import ceil
-from typing import Optional, Tuple, Union
 
 from pandas import DataFrame, Series
 from telegram import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Update
@@ -32,7 +29,7 @@ lecture_components = {
 }
 
 
-def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
+def get_lecture_message_text(item: Series | DataFrame) -> str:
     if isinstance(item.series, str):
         series_text, lecture = item.series, item.lecture
     else:
@@ -42,7 +39,7 @@ def get_lecture_message_text(item: Union[Series, DataFrame]) -> str:
 
 def get_data(
     data: Series, data_column_id: str, page: int = 1
-) -> Tuple[str, InlineKeyboardMarkup]:
+) -> tuple[str, InlineKeyboardMarkup]:
     text = "*اختر ما تريد من القائمة:*"
     paginator = InlineKeyboardPaginator(
         ceil(len(data) / page_size),
@@ -89,7 +86,7 @@ async def data_callback_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) ->
 
 @tg_exceptions_handler
 async def droos_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    """Sends Droos list."""
+    """Send Droos list."""
     query: CallbackQuery = update.callback_query
     await query.answer()
     # get series query
@@ -117,7 +114,7 @@ async def droos_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         return
     if data_column_id != "series":
         # Handle author/category
-        series_data: Series = data.groupby(f"series_slug")["series"].unique()
+        series_data: Series = data.groupby("series_slug")["series"].unique()
         text, reply_markup = get_data(series_data, "series", page=page_idx)
         await query.edit_message_text(
             text=text,
@@ -152,7 +149,7 @@ async def droos_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 @analysis
 async def get_lecture_callback_handler(
     update: Update, _: CallbackContext
-) -> Optional[Series]:
+) -> Series | None:
     query = update.callback_query
     await query.answer()
     __, data, lecture_id = query.data.split("|")

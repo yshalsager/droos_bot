@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from functools import wraps
-from typing import Any, Callable, TypeVar, cast
+from typing import Any, TypeVar, cast
 
 from telegram import Update
 from telegram.ext import CallbackContext
@@ -17,7 +18,9 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 def add_new_chat_to_db(func: F) -> F:
     @wraps(func)
-    def wrapper(update: Update, context: CallbackContext, *args, **kwargs) -> F:  # type: ignore
+    def wrapper(
+        update: Update, context: CallbackContext, *args: Any, **kwargs: Any
+    ) -> F:
         assert update.effective_chat is not None
         assert update.effective_chat.id is not None
         assert (

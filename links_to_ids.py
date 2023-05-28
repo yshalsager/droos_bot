@@ -1,18 +1,15 @@
-"""
-A script to convert telegram links in a Google sheet to bot own file IDs
-"""
+"""A script to convert telegram links in a Google sheet to bot own file IDs."""
 import json
+import logging
 import re
 from asyncio import sleep
 from pathlib import Path
-from typing import List, Union
 
 from convopyro import Conversation
+from droos_bot.gsheet.spreadsheet import Spreadsheet
 from gspread import Cell
 from pyrogram import Client, filters
 from pyrogram.types import Audio, Document, Photo, Video, Voice
-
-from droos_bot.gsheet.spreadsheet import Spreadsheet
 
 work_dir = Path(__name__).parent
 config = json.loads((work_dir / "config.json").read_text(encoding="utf-8"))
@@ -23,8 +20,8 @@ Conversation(telegram_client)
 
 
 async def main() -> None:
-    """
-    - Read Google sheet (using service account with write access)
+    """Read Google sheet (using service account with write access).
+
     - Find all telegram links, using regex from config file
     - For each link, forwards the message as copy to the deployed bot (it must be running)
     - Read bot reply text and replace link cell with {message.media}τ{reply_message.text}
@@ -36,7 +33,7 @@ async def main() -> None:
         config["sheet_name"],
         config["data_columns"],
     )
-    telegram_links: List[Cell] = sheet.worksheet.sheet.findall(
+    telegram_links: list[Cell] = sheet.worksheet.sheet.findall(
         re.compile(config["links_regex"])
     )
     if not telegram_links:
@@ -56,11 +53,11 @@ async def main() -> None:
                 if hasattr(message, "media") and hasattr(message.media, "value")
                 else None
             )
-            media: Union[Photo, Audio, Video, Voice, Document] = getattr(
+            media: Photo | Audio | Video | Voice | Document = getattr(
                 message, message_type, None
             )
             if not message_type or not media or not hasattr(media, "file_id"):
-                print(f"{link}: can't get media!")
+                logging.warning(f"{link}: can't get media!")
                 continue
         await telegram_client.copy_message(
             chat_id=config["tg_bot_username"],
@@ -74,7 +71,7 @@ async def main() -> None:
         sheet.worksheet.sheet.update_cell(
             link.row, link.col, f"{message_type}τ{reply_message.text}"
         )
-        print(f"Updated cell {link}")
+        logging.info(f"Updated cell {link}")
 
     await telegram_client.send_message(config["tg_bot_username"], "/done")
 

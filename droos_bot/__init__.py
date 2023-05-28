@@ -1,11 +1,10 @@
-""" Bot initialization """
+"""Bot initialization."""
 import json
 import logging
 from functools import partial
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 from sys import stderr, stdout
-from typing import Dict
 
 from telegram.constants import ParseMode
 from telegram.ext import ApplicationBuilder, Defaults, PicklePersistence
@@ -21,7 +20,7 @@ PARENT_DIR = WORK_DIR.parent
 CONFIG = json.loads((PARENT_DIR / "config.json").read_text(encoding="utf-8"))
 BOT_TOKEN = CONFIG["tg_bot_token"]
 TG_BOT_ADMINS = CONFIG["tg_bot_admins"]
-DATA_COLUMNS: Dict[str, str] = CONFIG["data_columns"]
+DATA_COLUMNS: dict[str, str] = CONFIG["data_columns"]
 
 # Logging
 LOG_FILE = PARENT_DIR / "last_run.log"
@@ -62,3 +61,5 @@ sheet = Spreadsheet(
     CONFIG["sheet_name"],
     DATA_COLUMNS,
 )
+
+logging.getLogger("httpx").setLevel(logging.WARNING)

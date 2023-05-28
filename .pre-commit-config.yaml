@@ -66,3 +66,8 @@ repos:
     rev: 'v1.3.0'  # Use the sha / tag you want to point at
     hooks:
       - id: mypy
+        args:
+          - --install-types
+        additional_dependencies:
+          - SQLAlchemy==2.0.15
+

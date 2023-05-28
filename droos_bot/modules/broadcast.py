@@ -1,6 +1,4 @@
-"""
-broadcast module.
-"""
+"""broadcast module."""
 import logging
 from time import sleep
 
