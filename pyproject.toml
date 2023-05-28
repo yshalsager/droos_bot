@@ -20,11 +20,7 @@ convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", branc
 links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.3.0"
 pre-commit = "^3.3.2"
-isort = "^5.11.4"
-mypy = "^1.3"
-flake8 = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
