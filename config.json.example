@@ -2,7 +2,6 @@
     "tg_bot_token": "0000000000:aaaaaaaaaaaaaaaaaaaa",
     "tg_bot_admins": [000000, 000000, 000000],
     "tg_feedback_chat_id": -10000000000,
-    "tg_bot_username": "@bot",
     "tg_api_id": "00000",
     "tg_api_hash": "00000000000000000000000000",
     "sheet_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -12,5 +11,4 @@
     },
     "hide": [],
     "disable": ["إرسال مواد"]
-    "links_regex": ""
 }

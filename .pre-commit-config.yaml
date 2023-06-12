@@ -47,7 +47,7 @@ repos:
     hooks:
       - id: poetry-check
       - id: poetry-export
-        args: [ "-f", "requirements.txt", "-o", "requirements.txt", "--without-hashes", "--extras", "links_to_ids" ]
+        args: [ "-f", "requirements.txt", "-o", "requirements.txt", "--without-hashes" ]
   - repo: https://github.com/MarcoGorelli/absolufy-imports
     rev: v0.3.1
     hooks:

@@ -29,6 +29,21 @@ lecture_components = {
 }
 
 
+async def parse_telegram_link(telegram_link: str) -> tuple[str, str]:
+    telegram_chat, message_id = telegram_link.split("/")[-2:]
+    if telegram_chat.startswith("-") or telegram_chat.isdigit():
+        telegram_chat_id = telegram_chat
+    elif application.bot_data.get("chats", {}).get(telegram_chat):
+        telegram_chat_id = application.bot_data["chats"][telegram_chat]
+    else:
+        telegram_chat_id = (await application.bot.get_chat(f"@{telegram_chat}")).id
+        if application.bot_data.get("chats"):
+            application.bot_data["chats"][telegram_chat] = telegram_chat_id
+        else:
+            application.bot_data["chats"] = {telegram_chat: telegram_chat_id}
+    return telegram_chat_id, message_id
+
+
 def get_lecture_message_text(item: Series | DataFrame) -> str:
     if isinstance(item.series, str):
         series_text, lecture = item.series, item.lecture
@@ -156,51 +171,13 @@ async def get_lecture_callback_handler(
     lecture_info = sheet.df[sheet.df.id == lecture_id]
     if lecture_info.empty or getattr(lecture_info, data).empty:
         return None
-    media = getattr(lecture_info, data).item()
-    media_type, info = media.split("τ")
-    file_id, caption = info.split("Ͱ")
-    text = caption if caption else get_lecture_message_text(lecture_info)
-    if media_type == "text":
-        await application.bot.send_message(
-            chat_id=query.message.chat_id,
-            text=caption,
-            parse_mode=ParseMode.HTML,
-        )
-    if media_type == "video":
-        await application.bot.send_video(
-            chat_id=query.message.chat_id,
-            video=file_id,
-            caption=text,
-            parse_mode=ParseMode.HTML,
-        )
-    elif media_type == "audio":
-        await application.bot.send_audio(
-            chat_id=query.message.chat_id,
-            audio=file_id,
-            caption=text,
-            parse_mode=ParseMode.HTML,
-        )
-    elif media_type == "voice":
-        await application.bot.send_voice(
-            chat_id=query.message.chat_id,
-            voice=file_id,
-            caption=text,
-            parse_mode=ParseMode.HTML,
-        )
-    elif media_type == "document":
-        await application.bot.send_document(
-            chat_id=query.message.chat_id,
-            document=file_id,
-            caption=text,
-            parse_mode=ParseMode.HTML,
-        )
-    elif media_type == "photo":
-        await application.bot.send_photo(
-            chat_id=query.message.chat_id,
-            photo=file_id,
-            caption=text,
-            parse_mode=ParseMode.HTML,
-        )
+    message_link = getattr(lecture_info, data).item()
+    from_chat_id, message_id = await parse_telegram_link(message_link)
+    await application.bot.copy_message(
+        chat_id=query.message.chat_id,
+        from_chat_id=from_chat_id,
+        message_id=message_id,
+    )
     return lecture_info
 
 

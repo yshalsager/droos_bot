@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "droos-bot"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = ["yshalsager <ysh-alsager@hotmail.com>"]
 license = "MIT"
@@ -12,12 +12,6 @@ python-telegram-bot-pagination = "^0.0.2"
 gspread = "^5.9.0"
 gspread-pandas = "^3.2.2"
 SQLAlchemy = "^2.0.15"
-Pyrogram = { version = "^2.0.106", optional = true }
-TgCrypto = { version = "^1.2.5", optional = true }
-convopyro = { git = "https://github.com/Ripeey/Conversation-Pyrogram.git", branch = "main", optional = true }
-
-[tool.poetry.extras]
-links_to_ids = ["Pyrogram", "TgCrypto", "convopyro"]
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
