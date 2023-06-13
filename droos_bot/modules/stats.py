@@ -38,7 +38,7 @@ async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     if top_series:
         for series in top_series:
             try:
-                top_series_message += f"  `{sheet.df[sheet.df.series_slug == series.id].iloc[0].series}`: {str(series.requests)} مرة\n"
+                top_series_message += f"  `{sheet.df[sheet.df.series_slug == series.id].iloc[0].series}`: {series.requests!s} مرة\n"
             except IndexError:
                 continue
     top_lectures_message = ""
@@ -46,7 +46,7 @@ async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         for lecture in top_lectures:
             try:
                 lecture_info: DataFrame = sheet.df[sheet.df.id == lecture.id]
-                top_lectures_message += f"  `{lecture_info.series.item()} ({lecture_info.lecture.item()})`: {str(lecture.requests)} مرة\n"
+                top_lectures_message += f"  `{lecture_info.series.item()} ({lecture_info.lecture.item()})`: {lecture.requests!s} مرة\n"
             except ValueError:
                 continue
     message = message.replace("$top_series", top_series_message).replace(
