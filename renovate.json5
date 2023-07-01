@@ -32,5 +32,8 @@
       datasourceTemplate: "pypi",
       versioningTemplate: "pep440"
     }
-  ]
+  ],
+pip_requirements: {
+    "enabled": false
+  }
 }
