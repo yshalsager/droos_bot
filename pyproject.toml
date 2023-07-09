@@ -6,12 +6,12 @@ authors = ["yshalsager <ysh-alsager@hotmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 python-telegram-bot = "^20.3"
 python-telegram-bot-pagination = "^0.0.2"
 gspread = "^5.9.0"
 gspread-pandas = "^3.2.2"
-SQLAlchemy = "^2.0.15"
+SQLAlchemy = "^2.0.18"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
