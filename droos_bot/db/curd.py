@@ -82,3 +82,10 @@ def get_top_lectures() -> list[Lecture]:
 
 def get_all_chats() -> list[Chat]:
     return session.query(Chat).all()
+
+
+def get_chat_id_by_name(name: str) -> int:
+    return (
+        session.query(Chat.user_id).filter(Chat.user_name.like(f"%{name}%")).scalar()
+        or 0
+    )
