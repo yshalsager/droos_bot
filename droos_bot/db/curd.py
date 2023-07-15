@@ -1,5 +1,6 @@
 from pandas import DataFrame
 from sqlalchemy import Row
+from sqlalchemy.exc import MultipleResultsFound
 from sqlalchemy.sql.functions import sum
 
 from droos_bot.db import Lecture
@@ -85,7 +86,12 @@ def get_all_chats() -> list[Chat]:
 
 
 def get_chat_id_by_name(name: str) -> int:
-    return (
-        session.query(Chat.user_id).filter(Chat.user_name.like(f"%{name}%")).scalar()
-        or 0
-    )
+    try:
+        return (
+            session.query(Chat.user_id)
+            .filter(Chat.user_name.like(f"%{name}%"))
+            .scalar()
+            or 0
+        )
+    except MultipleResultsFound:
+        return 0
