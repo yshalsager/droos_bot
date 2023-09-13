@@ -639,12 +639,12 @@ webhooks = ["tornado (>=6.2,<7.0)"]
 
 [[package]]
 name = "python-telegram-bot-pagination"
-version = "0.0.2"
+version = "0.0.3"
 description = "Python inline keyboard pagination for Telegram Bot API"
 optional = false
 python-versions = "*"
 files = [
-    {file = "python-telegram-bot-pagination-0.0.2.tar.gz", hash = "sha256:46fe884edcc61a346e2c0a8f7fa777486db50cc08a29ff8585d078f9f70c4ec1"},
+    {file = "python-telegram-bot-pagination-0.0.3.tar.gz", hash = "sha256:15305e9faea6b33956f016f7c064adabc0e450142a7be33286c6f8d5fbbcdd49"},
 ]
 
 [[package]]
@@ -947,4 +947,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "00e89b76f231d95f31aebf57d7c8124edb44083bf0299dcf3e85e8b514bfec4d"
+content-hash = "a4225950286c198e4e426a4656ab169d65a250df8cd4d3e1fd88b085c038fd95"
