@@ -1,11 +1,11 @@
 anyio==4.0.0 ; python_version >= "3.11" and python_version < "4.0"
 cachetools==5.3.1 ; python_version >= "3.11" and python_version < "4.0"
 certifi==2023.7.22 ; python_version >= "3.11" and python_version < "4.0"
-charset-normalizer==3.2.0 ; python_version >= "3.11" and python_version < "4.0"
+charset-normalizer==3.3.0 ; python_version >= "3.11" and python_version < "4.0"
 decorator==5.1.1 ; python_version >= "3.11" and python_version < "4.0"
 google-auth-oauthlib==1.1.0 ; python_version >= "3.11" and python_version < "4.0"
 google-auth==2.23.2 ; python_version >= "3.11" and python_version < "4.0"
-greenlet==2.0.2 ; python_version >= "3.11" and python_version < "4.0" and (platform_machine == "aarch64" or platform_machine == "ppc64le" or platform_machine == "x86_64" or platform_machine == "amd64" or platform_machine == "AMD64" or platform_machine == "win32" or platform_machine == "WIN32")
+greenlet==3.0.0 ; python_version >= "3.11" and python_version < "4.0" and (platform_machine == "aarch64" or platform_machine == "ppc64le" or platform_machine == "x86_64" or platform_machine == "amd64" or platform_machine == "AMD64" or platform_machine == "win32" or platform_machine == "WIN32")
 gspread-pandas==3.2.3 ; python_version >= "3.11" and python_version < "4.0"
 gspread==5.11.3 ; python_version >= "3.11" and python_version < "4.0"
 h11==0.14.0 ; python_version >= "3.11" and python_version < "4.0"
