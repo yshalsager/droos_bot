@@ -303,13 +303,13 @@ test = ["objgraph", "psutil"]
 
 [[package]]
 name = "gspread"
-version = "5.12.0"
+version = "5.12.1"
 description = "Google Spreadsheets Python API"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "gspread-5.12.0-py3-none-any.whl", hash = "sha256:6fc8e0e627ec878b57caa69ce1c86225b54bee073bbfe5252f3868ea9a61d965"},
-    {file = "gspread-5.12.0.tar.gz", hash = "sha256:a3fb9bdf1c185aeee32a6cf533b32628012f065327c50a810f1c909dc5eba64b"},
+    {file = "gspread-5.12.1-py3-none-any.whl", hash = "sha256:0de00abef97d75c0a128a0d87ca570b5ff26edc8a9fa9e3351582de7d0e0e408"},
+    {file = "gspread-5.12.1.tar.gz", hash = "sha256:eb1e657fe27869fb8a75ba71a88adb69285be9c6ed9a8fabd4386b059ada69d9"},
 ]
 
 [package.dependencies]
