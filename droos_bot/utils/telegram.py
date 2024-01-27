@@ -41,9 +41,7 @@ def get_chat_type(update: Update) -> int:
     return (
         0
         if chat.type == chat.PRIVATE
-        else 1
-        if chat.type == chat.GROUP
-        else 2  # chat.type == chat.CHANNEL
+        else 1 if chat.type == chat.GROUP else 2  # chat.type == chat.CHANNEL
     )
 
 

@@ -1,4 +1,5 @@
 """Droos handler module."""
+
 from functools import partial
 from math import ceil
 

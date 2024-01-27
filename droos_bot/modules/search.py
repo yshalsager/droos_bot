@@ -1,4 +1,5 @@
 """Data search module."""
+
 from typing import cast
 
 from telegram import Update
