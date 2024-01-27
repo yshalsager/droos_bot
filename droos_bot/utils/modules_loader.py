@@ -1,4 +1,5 @@
 """Bot modules dynamic loader."""
+
 import logging
 from importlib import import_module
 from pathlib import Path
