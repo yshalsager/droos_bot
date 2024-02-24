@@ -319,20 +319,20 @@ google-auth-oauthlib = ">=0.4.1"
 
 [[package]]
 name = "gspread-pandas"
-version = "3.2.3"
+version = "3.3.0"
 description = "A package to easily open an instance of a Google spreadsheet and interact with worksheets through Pandas DataFrames."
 optional = false
 python-versions = "*"
 files = [
-    {file = "gspread-pandas-3.2.3.tar.gz", hash = "sha256:2fd5bd089c31c728c4e0b362c4eb0e7155580fd326dbda75061f5eacea1295de"},
-    {file = "gspread_pandas-3.2.3-py2.py3-none-any.whl", hash = "sha256:98d7f5335253fee9e31ace51d1743bcc80c814cd1bac265d1eefa54a91e79a25"},
+    {file = "gspread-pandas-3.3.0.tar.gz", hash = "sha256:aac84bd63594db6271ad2cfe10be64614ea5d1129d063ca57b40c2b9dcc18013"},
+    {file = "gspread_pandas-3.3.0-py2.py3-none-any.whl", hash = "sha256:a4dfddd7b1c5418742e30099a01766ecd96d1f5bbcad8b1e1060c4a5f16fd627"},
 ]
 
 [package.dependencies]
 decorator = "*"
 google-auth = "*"
 google-auth-oauthlib = "*"
-gspread = ">=5.0.0"
+gspread = ">=5.0.0,<6"
 pandas = ">=0.20.0"
 
 [package.extras]
