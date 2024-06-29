@@ -5,7 +5,7 @@ logger = logging.getLogger(__name__)
 
 
 def run_command(command: str) -> str:
-    with Popen(
+    with Popen(  # noqa: S602
         command,
         stdout=PIPE,
         bufsize=1,
