@@ -10,7 +10,7 @@ def run_command(command: str) -> str:
         stdout=PIPE,
         bufsize=1,
         universal_newlines=True,
-        shell=True,  # noqa: S602
+        shell=True,
     ) as p:
         assert p.stdout is not None
         output = p.stdout.read()
