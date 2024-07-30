@@ -4,3 +4,6 @@ python = '3.12'
 
 [tasks.default]
 run = 'python -m droos_bot'
+
+[tasks.debug]
+run = 'jurigged -v -m droos_bot'
