@@ -6,15 +6,15 @@ authors = ["yshalsager <ysh-alsager@hotmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-python-telegram-bot = "^20.3"
+python = "^3.12"
+python-telegram-bot = "^21.4"
 python-telegram-bot-pagination = "^0.0.3"
-gspread = "^5.9.0"
-gspread-pandas = "^3.2.2"
-SQLAlchemy = "^2.0.18"
+gspread = "^5.12.4"
+gspread-pandas = "^3.3.0"
+SQLAlchemy = "^2.0.31"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^3.3.2"
+pre-commit = "^3.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -22,26 +22,18 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]  # https://github.com/charliermarsh/ruff
 fix = true
-ignore-init-module-imports = true
-line-length = 100
-select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "G", "I", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
-ignore = ["E501", "PGH001", "RET504", "S101", "D211", "D213", "ERA001", "G004", "D100", "D101", "D102", "D103", "D104", "D105", "D104", "D107"]
-unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 src = ["droos_bot"]
-target-version = "py310"
+target-version = "py312"
+line-length = 100
 
-[tool.black]
-include = '(droos_bot\/.*$|\.pyi?$)'
-exclude = '''
-/(
-    \.git
-  | __pycache__
-  | \.venv
-)/
-'''
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "lf"
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint]
+select = ["A", "B", "BLE", "C4", "C90", "D", "DTZ", "E", "ERA", "F", "G", "I", "INP", "ISC", "N", "NPY", "PGH", "PIE", "PLC", "PLE", "PLR", "PLW", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "S", "SIM", "T10", "T20", "TID", "UP", "W", "YTT"]
+ignore = ["E501", "S307", "RET504", "S101", "D211", "D213", "ERA001", "G004", "D100", "D101", "D102", "D103", "D104", "D105", "D104", "D107", "D203", "ISC001"]
+unfixable = ["ERA001", "F401", "F841", "T201", "T203"]
 
 [tool.mypy]
 files = ["droos_bot"]

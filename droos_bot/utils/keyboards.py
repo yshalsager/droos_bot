@@ -5,9 +5,7 @@ from droos_bot import CONFIG, DATA_COLUMNS
 
 def create_main_keyboard() -> list[list[str]]:
     data_values = [
-        [value]
-        for key, value in DATA_COLUMNS.items()
-        if key not in CONFIG.get("hide", [])
+        [value] for key, value in DATA_COLUMNS.items() if key not in CONFIG.get("hide", [])
     ]
     main_keyboard_buttons = [*data_values]
     buttons_to_disable = CONFIG.get("disable", [])

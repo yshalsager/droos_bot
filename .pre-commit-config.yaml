@@ -48,20 +48,12 @@ repos:
       - id: poetry-check
       - id: poetry-export
         args: [ "-f", "requirements.txt", "-o", "requirements.txt", "--without-hashes" ]
-  - repo: https://github.com/MarcoGorelli/absolufy-imports
-    rev: v0.3.1
-    hooks:
-      - id: absolufy-imports
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
     rev: 'v0.5.5'
     hooks:
       - id: ruff
-  - repo: https://github.com/psf/black
-    rev: 24.4.2
-    hooks:
-      - id: black
-        args: [ --config=pyproject.toml ]
+      - id: ruff-format
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: 'v1.11.0'  # Use the sha / tag you want to point at
     hooks:

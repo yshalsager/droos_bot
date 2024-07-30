@@ -11,9 +11,7 @@ from droos_bot.db.session import session
 
 def increment_series_requests(series_info: DataFrame) -> None:
     series: Series | None = (
-        session.query(Series)
-        .filter(Series.id == series_info.series_slug.item())
-        .first()
+        session.query(Series).filter(Series.id == series_info.series_slug.item()).first()
     )
     if series:
         series.requests += 1
@@ -54,22 +52,16 @@ def get_chats_count() -> tuple[int, int]:
 
 
 def get_usage_count() -> tuple[int, int, int]:
-    usage_times_row: Row | None = session.query(
-        sum(Chat.usage_times).label("usage_times")
-    ).first()
+    usage_times_row: Row | None = session.query(sum(Chat.usage_times).label("usage_times")).first()
     usage_times: int = usage_times_row.usage_times if usage_times_row else 0
     series_requests_row: Row | None = session.query(
         sum(Series.requests).label("series_requests")
     ).first()
-    series_requests: int = (
-        series_requests_row.series_requests if series_requests_row else 0
-    )
+    series_requests: int = series_requests_row.series_requests if series_requests_row else 0
     lecture_requests_row: Row | None = session.query(
         sum(Lecture.requests).label("lecture_requests")
     ).first()
-    lecture_requests: int = (
-        lecture_requests_row.lecture_requests if lecture_requests_row else 0
-    )
+    lecture_requests: int = lecture_requests_row.lecture_requests if lecture_requests_row else 0
     return usage_times, series_requests, lecture_requests
 
 
@@ -87,11 +79,6 @@ def get_all_chats() -> list[Chat]:
 
 def get_chat_id_by_name(name: str) -> int:
     try:
-        return (
-            session.query(Chat.user_id)
-            .filter(Chat.user_name.like(f"%{name}%"))
-            .scalar()
-            or 0
-        )
+        return session.query(Chat.user_id).filter(Chat.user_name.like(f"%{name}%")).scalar() or 0
     except MultipleResultsFound:
         return 0

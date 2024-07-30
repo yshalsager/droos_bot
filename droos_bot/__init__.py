@@ -26,8 +26,7 @@ DATA_COLUMNS: dict[str, str] = CONFIG["data_columns"]
 # Logging
 LOG_FILE = PARENT_DIR / "last_run.log"
 LOG_FORMAT = (
-    "%(asctime)s [%(levelname)s] %(name)s "
-    "[%(module)s.%(funcName)s:%(lineno)d]: %(message)s"
+    "%(asctime)s [%(levelname)s] %(name)s " "[%(module)s.%(funcName)s:%(lineno)d]: %(message)s"
 )
 FORMATTER: logging.Formatter = logging.Formatter(LOG_FORMAT)
 handler = TimedRotatingFileHandler(LOG_FILE, when="d", interval=1, backupCount=3)

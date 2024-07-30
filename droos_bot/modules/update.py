@@ -13,9 +13,7 @@ async def update_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Update the bot then restart."""
     assert update.effective_message is not None
     assert update.effective_chat is not None
-    git_output = run_command(
-        "git fetch origin master && git reset --hard origin/master"
-    )
+    git_output = run_command("git fetch origin master && git reset --hard origin/master")
     if git_output:
         await update.effective_message.reply_text(
             f"```\n{git_output}\n```",

@@ -114,9 +114,7 @@ async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 
 feedback_conversation_handler = ConversationHandler(
-    entry_points=[
-        MessageHandler(filters.Regex("^التواصل والاقتراحات$"), feedback_handler)
-    ],
+    entry_points=[MessageHandler(filters.Regex("^التواصل والاقتراحات$"), feedback_handler)],
     states={
         START_RECEIVING_FEEDBACK: [
             MessageHandler(

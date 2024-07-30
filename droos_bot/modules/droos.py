@@ -53,9 +53,7 @@ def get_lecture_message_text(item: Series | DataFrame) -> str:
     return f"السلسلة: <b> 🗂{series_text}</b>\n📚 الدرس: <b>{lecture}</b>\n"
 
 
-def get_data(
-    data: Series, data_column_id: str, page: int = 1
-) -> tuple[str, InlineKeyboardMarkup]:
+def get_data(data: Series, data_column_id: str, page: int = 1) -> tuple[str, InlineKeyboardMarkup]:
     text = "*اختر ما تريد من القائمة:*"
     paginator = InlineKeyboardPaginator(
         ceil(len(data) / page_size),
@@ -66,9 +64,7 @@ def get_data(
     data_list = data.iloc[chunk_start : chunk_start + page_size]
     for slug, item in data_list.items():
         paginator.add_before(
-            InlineKeyboardButton(
-                item.item(), callback_data=f"load_{data_column_id}|{slug}"
-            )
+            InlineKeyboardButton(item.item(), callback_data=f"load_{data_column_id}|{slug}")
         )
     return text, paginator.markup
 
@@ -88,12 +84,8 @@ async def data_callback_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) ->
     await query.answer()
     data_column_id = query.data.split("_")[-1].split("#")[0]
     current_page_callback_value = query.data.split("#")[1]
-    current_page = (
-        int(current_page_callback_value) if current_page_callback_value else 1
-    )
-    text, reply_markup = get_data(
-        getattr(sheet, data_column_id), data_column_id, page=current_page
-    )
+    current_page = int(current_page_callback_value) if current_page_callback_value else 1
+    text, reply_markup = get_data(getattr(sheet, data_column_id), data_column_id, page=current_page)
     await query.edit_message_text(
         text=text,
         reply_markup=reply_markup,
@@ -118,13 +110,7 @@ async def droos_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         await query.edit_message_text(
             text="حدث خطأ في جلب البيانات المطلوبة",
             reply_markup=InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            "رجوع", callback_data=f"list_{data_column_id}#"
-                        )
-                    ]
-                ]
+                [[InlineKeyboardButton("رجوع", callback_data=f"list_{data_column_id}#")]]
             ),
         )
         return
@@ -147,13 +133,9 @@ async def droos_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     buttons = []
     for component, name in lecture_components.items():
         if getattr(item, component):
-            buttons.append(
-                InlineKeyboardButton(name, callback_data=f"getd|{component}|{item.id}")
-            )
+            buttons.append(InlineKeyboardButton(name, callback_data=f"getd|{component}|{item.id}"))
     paginator.add_before(*buttons)
-    paginator.add_after(
-        InlineKeyboardButton("رجوع", callback_data=f"list_{data_column_id}#")
-    )
+    paginator.add_after(InlineKeyboardButton("رجوع", callback_data=f"list_{data_column_id}#"))
     await query.edit_message_text(
         text=get_lecture_message_text(item),
         reply_markup=paginator.markup,
@@ -163,9 +145,7 @@ async def droos_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
 
 @tg_exceptions_handler
 @analysis
-async def get_lecture_callback_handler(
-    update: Update, _: CallbackContext
-) -> Series | None:
+async def get_lecture_callback_handler(update: Update, _: CallbackContext) -> Series | None:
     query = update.callback_query
     await query.answer()
     __, data, lecture_id = query.data.split("|")
@@ -190,14 +170,8 @@ for _data_column_id, _data_column_name in DATA_COLUMNS.items():
             partial(data_command_handler, data_column_id=_data_column_id),
         )
     )
-    application.add_handler(
-        CallbackQueryHandler(data_callback_handler, pattern=r"^list_[\w]+#")
-    )
+    application.add_handler(CallbackQueryHandler(data_callback_handler, pattern=r"^list_[\w]+#"))
     # lectures
-    application.add_handler(
-        CallbackQueryHandler(droos_handler, pattern=r"^load_[\w]+\|")
-    )
+    application.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^load_[\w]+\|"))
     application.add_handler(CallbackQueryHandler(droos_handler, pattern=r"^[\w_]+#"))
-application.add_handler(
-    CallbackQueryHandler(get_lecture_callback_handler, pattern=r"^getd\|")
-)
+application.add_handler(CallbackQueryHandler(get_lecture_callback_handler, pattern=r"^getd\|"))
