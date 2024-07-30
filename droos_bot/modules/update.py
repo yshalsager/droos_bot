@@ -22,5 +22,4 @@ async def update_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await restart(update, _)
 
 
-filter_bot_admin = FilterBotAdmin()
-application.add_handler(CommandHandler("update", update_, filter_bot_admin))
+application.add_handler(CommandHandler("update", update_, FilterBotAdmin()))

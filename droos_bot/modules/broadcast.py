@@ -51,8 +51,6 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
-filter_bot_admin = FilterBotAdmin()
-
 application.add_handler(
-    CommandHandler("broadcast", broadcast, filters=filters.REPLY & filter_bot_admin)
+    CommandHandler("broadcast", broadcast, filters=filters.REPLY & FilterBotAdmin())
 )

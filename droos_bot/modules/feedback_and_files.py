@@ -155,10 +155,9 @@ if "التواصل والاقتراحات" not in CONFIG.get("disable", []):
 if "إرسال مواد" not in CONFIG.get("disable", []):
     application.add_handler(files_conversation_handler)
 
-filter_bot_admin = FilterBotAdmin()
 filter_feedback_message = FeedbackMessageFilter(
     CONFIG["tg_feedback_chat_id"], CONFIG["tg_bot_token"].split(":")[0]
 )
 application.add_handler(
-    MessageHandler(filter_bot_admin & filter_feedback_message, reply_to_feedback)
+    MessageHandler(FilterBotAdmin() & filter_feedback_message, reply_to_feedback)
 )

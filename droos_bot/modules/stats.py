@@ -56,5 +56,4 @@ async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     await stats_message.edit_text(message, parse_mode=ParseMode.MARKDOWN_V2)
 
 
-filter_bot_admin = FilterBotAdmin()
-application.add_handler(CommandHandler("stats", stats, filter_bot_admin))
+application.add_handler(CommandHandler("stats", stats, FilterBotAdmin()))
