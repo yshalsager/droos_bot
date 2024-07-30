@@ -1,11 +1,9 @@
 """Bot initialization."""
 
 import json
-import logging
+import logging.config
 from functools import partial
-from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
-from sys import stderr, stdout
 
 from telegram.constants import ParseMode
 from telegram.ext import ApplicationBuilder, Defaults, PicklePersistence
@@ -24,24 +22,42 @@ TG_BOT_ADMINS = CONFIG["tg_bot_admins"]
 DATA_COLUMNS: dict[str, str] = CONFIG["data_columns"]
 
 # Logging
-LOG_FILE = PARENT_DIR / "last_run.log"
-LOG_FORMAT = (
-    "%(asctime)s [%(levelname)s] %(name)s " "[%(module)s.%(funcName)s:%(lineno)d]: %(message)s"
-)
-FORMATTER: logging.Formatter = logging.Formatter(LOG_FORMAT)
-handler = TimedRotatingFileHandler(LOG_FILE, when="d", interval=1, backupCount=3)
-logging.basicConfig(filename=str(LOG_FILE), filemode="w", format=LOG_FORMAT)
-OUT = logging.StreamHandler(stdout)
-ERR = logging.StreamHandler(stderr)
-OUT.setFormatter(FORMATTER)
-ERR.setFormatter(FORMATTER)
-OUT.setLevel(logging.INFO)
-ERR.setLevel(logging.WARNING)
-LOGGER = logging.getLogger()
-LOGGER.addHandler(OUT)
-LOGGER.addHandler(ERR)
-LOGGER.addHandler(handler)
-LOGGER.setLevel(logging.INFO)
+log_file_path = PARENT_DIR / "last_run.log"
+logging_config = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "detailed": {
+            "format": "%(asctime)s [%(levelname)s] %(name)s [%(module)s.%(funcName)s:%(lineno)d]: %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    "handlers": {
+        "file": {
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "level": "INFO",
+            "formatter": "detailed",
+            "filename": log_file_path,
+            "when": "midnight",
+            "interval": 1,
+            "backupCount": 7,
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "detailed",
+            "stream": "ext://sys.stdout",
+        },
+    },
+    "loggers": {
+        "": {  # root logger
+            "handlers": ["file", "console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
+}
+logging.config.dictConfig(logging_config)
 
 # bot
 persistence = PicklePersistence(filepath=f"{PARENT_DIR}/bot.pickle")
