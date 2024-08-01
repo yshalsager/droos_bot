@@ -67,7 +67,7 @@ venv.bak/
 .vscode/
 
 # Bot files
-config.json
+config*.json
 *.pickle
 last_run.log*
 *.session
