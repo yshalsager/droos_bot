@@ -62,7 +62,7 @@ def create_keyboard(  # noqa: PLR0913
     # slice data
     start_idx = current_page * items_per_page
     end_idx = start_idx + items_per_page
-    keyboard = [[f"▫️ {item}" if show_bullet else item] for item in items[start_idx:end_idx]]
+    keyboard = [[f"• {item}" if show_bullet else item] for item in items[start_idx:end_idx]]
 
     # finalize the keyboard
     bottom_row = ["القائمة الرئيسية 🏠"]

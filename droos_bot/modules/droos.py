@@ -33,22 +33,25 @@ async def parse_telegram_link(telegram_link: str) -> tuple[str, str]:
 @tg_exceptions_handler
 @add_new_chat_to_db
 async def handle_navigation(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    query = update.message.text.replace("▫️", "").strip()
+    query = update.message.text.lstrip("•").strip()
     user_data = context.user_data
     page = 0
     if query == "🔙 رجوع":
         if user_data.get("path"):
             user_data["path"].pop()
+        if not user_data.get("path"):
+            return await start_handler(update, context)
     elif any(i in query for i in ("«", "»")):
         # Handle first and last page navigation
         page = 0 if "«" in query else -1
     elif (
         query.startswith("🔶")
         or any(i in query for i in ("←", "→"))
-        or (query.isdigit() and not update.message.text.startswith("▫️"))
+        or (query.isdigit() and not update.message.text.startswith("•"))
     ):
         match = re.search(r"(\d+)", query)
         page = int(match.group(1)) - 1 if match else 0
+    else:
         if "path" not in user_data:
             user_data["path"] = []
         # search results
@@ -57,9 +60,7 @@ async def handle_navigation(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         else:
             user_data["path"].append(query)
 
-    if not user_data.get("path", []):
-        return await start_handler(update, context)
-    current_level = sheet.navigate_hierarchy(user_data.get("path", []))
+    current_level = sheet.navigate_hierarchy(user_data["path"])
     assert current_level is not None
 
     if "__data" in current_level:
@@ -125,7 +126,7 @@ for _data_column_id, _data_column_name in DATA_COLUMNS.items():
 # navigation
 application.add_handler(
     MessageHandler(
-        filters.ChatType.PRIVATE & ~filters.COMMAND & (filters.Regex(r"[«»←→🔶\d]|🔙 رجوع|▫️")),
+        filters.ChatType.PRIVATE & ~filters.COMMAND & (filters.Regex(r"[«»←→🔶\d]|🔙 رجوع|•")),
         handle_navigation,
     )
 )
