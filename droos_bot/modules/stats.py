@@ -2,8 +2,7 @@
 
 from pandas import DataFrame
 from telegram import Update
-from telegram.constants import ParseMode
-from telegram.ext import CommandHandler, ContextTypes
+from telegram.ext import CommandHandler, ContextTypes, filters
 
 from droos_bot import application, sheet
 from droos_bot.db import Lecture, Series
@@ -53,7 +52,7 @@ async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
         top_series_placeholder=top_series_message, top_lectures_placeholder=top_lectures_message
     )
 
-    await stats_message.edit_text(message, parse_mode=ParseMode.HTML)
+    await stats_message.edit_text(message)
 
 
-application.add_handler(CommandHandler("stats", stats, FilterBotAdmin()))
+application.add_handler(CommandHandler("stats", stats, filters.ChatType.PRIVATE & FilterBotAdmin()))

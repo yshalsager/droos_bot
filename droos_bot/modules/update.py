@@ -16,7 +16,7 @@ async def update_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     git_output = run_command("git fetch origin master && git reset --hard origin/master")
     if git_output:
         await update.effective_message.reply_text(
-            f"```\n{git_output}\n```",
+            f"<pre>{git_output}</pre>",
             reply_to_message_id=update.effective_message.message_id,
         )
     await restart(update, _)

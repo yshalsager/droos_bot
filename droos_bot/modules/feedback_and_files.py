@@ -1,7 +1,7 @@
 """Feedback and files handler module."""
 
 from telegram import MessageOriginHiddenUser, MessageOriginUser, Update
-from telegram.constants import MessageLimit, ParseMode
+from telegram.constants import MessageLimit
 from telegram.ext import (
     CommandHandler,
     ContextTypes,
@@ -92,7 +92,6 @@ async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await context.bot.send_message(
         chat_id,
         reply_with_message_text,
-        parse_mode=ParseMode.HTML,
     )
     await context.bot.copy_message(
         chat_id=chat_id,
@@ -108,7 +107,6 @@ async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await update.effective_message.reply_text(
         admin_message,
         reply_to_message_id=update.effective_message.message_id,
-        parse_mode=ParseMode.HTML,
     )
 
 

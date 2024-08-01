@@ -53,7 +53,7 @@ async def handle_restart(parent_dir: Path, application: Application) -> None:
     if restart_message_path.exists():
         restart_message = json.loads(restart_message_path.read_text())
         await application.bot.edit_message_text(
-            "`Restarted Successfully!`",
+            "<code>Restarted Successfully!</code>",
             restart_message["chat"],
             restart_message["message"],
         )

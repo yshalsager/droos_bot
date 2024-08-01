@@ -4,7 +4,6 @@ import logging
 from time import sleep
 
 from telegram import Message, Update
-from telegram.constants import ParseMode
 from telegram.error import TelegramError
 from telegram.ext import CommandHandler, ContextTypes, filters
 
@@ -47,10 +46,11 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.effective_message.reply_text(
         broadcast_status_message,
         reply_to_message_id=update.effective_message.message_id,
-        parse_mode=ParseMode.HTML,
     )
 
 
 application.add_handler(
-    CommandHandler("broadcast", broadcast, filters=filters.REPLY & FilterBotAdmin())
+    CommandHandler(
+        "broadcast", broadcast, filters=filters.ChatType.PRIVATE & filters.REPLY & FilterBotAdmin()
+    )
 )

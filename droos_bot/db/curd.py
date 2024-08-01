@@ -1,3 +1,5 @@
+from typing import Any
+
 from pandas import DataFrame
 from sqlalchemy import Row
 from sqlalchemy.exc import MultipleResultsFound
@@ -9,32 +11,34 @@ from droos_bot.db.models.series import Series
 from droos_bot.db.session import session
 
 
-def increment_series_requests(series_info: DataFrame) -> None:
-    series: Series | None = (
-        session.query(Series).filter(Series.id == series_info.series_slug.item()).first()
-    )
+def increment_series_requests(series_info: dict[str, Any]) -> None:
+    series_id = "_".join(series_info["id"].split("_")[:-1])
+    series: Series | None = session.query(Series).filter(Series.id == series_id).first()
     if series:
         series.requests += 1
     else:
-        session.add(Series(id=series_info.series_slug.item(), requests=1))
+        session.add(Series(id=series_id, requests=1))
     session.commit()
 
 
 def increment_lecture_requests(lecture_info: DataFrame) -> None:
     lecture: Lecture | None = (
-        session.query(Lecture).filter(Lecture.id == lecture_info.id.item()).first()
+        session.query(Lecture).filter(Lecture.id == lecture_info["id"]).first()
     )
     if lecture:
         lecture.requests += 1
     else:
-        session.add(Lecture(id=lecture_info.id.item(), requests=1))
+        session.add(Lecture(id=lecture_info["id"], requests=1))
     session.commit()
 
 
 def add_chat_to_db(user_id: int, user_name: str, chat_type: int) -> None:
-    if not session.query(Chat).filter(Chat.user_id == user_id).first():
+    user: Chat | None = session.query(Chat).filter(Chat.user_id == user_id).first()
+    if not user:
         session.add(Chat(user_id=user_id, user_name=user_name, type=chat_type))
-        session.commit()
+    elif user.user_name != user_name:
+        user.user_name = user_name
+    session.commit()
 
 
 def increment_usage(user_id: int) -> None:

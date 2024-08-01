@@ -37,6 +37,8 @@ def analysis(func: F) -> F:
     async def wrapper(update: Update, context: CallbackContext) -> None:
         lecture_info = await func(update, context)
         assert update.effective_message is not None
+        if not lecture_info:
+            return
         increment_usage(update.effective_message.chat_id)
         increment_series_requests(lecture_info)
         increment_lecture_requests(lecture_info)

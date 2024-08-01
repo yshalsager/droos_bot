@@ -20,6 +20,17 @@ CONFIG = json.loads((PARENT_DIR / "config.json").read_text(encoding="utf-8"))
 BOT_TOKEN = CONFIG["tg_bot_token"]
 TG_BOT_ADMINS = CONFIG["tg_bot_admins"]
 DATA_COLUMNS: dict[str, str] = CONFIG["data_columns"]
+LECTURE_COMPONENTS: dict[str, str] = CONFIG.get(
+    "lecture_components",
+    {
+        "book": "📕 الكتاب",
+        "main": "📝 المحاور",
+        "video": "🎞 فيديو",
+        "voice": "🎧 صوتي",
+        "text": "📄 تفريغ",
+        "summary": "📎 ملخص",
+    },
+)
 
 # Logging
 log_file_path = PARENT_DIR / "last_run.log"
@@ -61,7 +72,7 @@ logging.config.dictConfig(logging_config)
 
 # bot
 persistence = PicklePersistence(filepath=f"{PARENT_DIR}/bot.pickle")
-defaults = Defaults(parse_mode=ParseMode.MARKDOWN_V2, disable_web_page_preview=True)
+defaults = Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 application = (
     ApplicationBuilder()
@@ -76,6 +87,7 @@ sheet = Spreadsheet(
     CONFIG["sheet_id"],
     CONFIG["sheet_name"],
     DATA_COLUMNS,
+    LECTURE_COMPONENTS,
 )
 
 logging.getLogger("httpx").setLevel(logging.WARNING)

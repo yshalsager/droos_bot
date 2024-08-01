@@ -1,8 +1,10 @@
 import logging
 from pathlib import Path
+from typing import Any
 
 from gspread_pandas import Client, Spread, conf
 from pandas import DataFrame
+from pyarabic.trans import convert as transliterate
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +16,7 @@ class Spreadsheet:
         sheet_id: str,
         sheet_name: str,
         data_columns: dict[str, str],
+        lecture_components: dict[str, str],
     ) -> None:
         self._client: Client = Client(
             config=conf.get_config(
@@ -21,21 +24,46 @@ class Spreadsheet:
             )
         )
         self.worksheet: Spread = Spread(sheet_id, sheet=sheet_name, client=self._client)
-        # self.table_headers: list[str] = self._sheet.sheet.row_values(1)
-        # self.items: list[Dict[str, str]] = self._sheet.sheet.get_all_records()[1:]
-        # self.df = self.worksheet.sheet_to_df()
         self.df: DataFrame = self.worksheet.sheet_to_df().iloc[1:]
-        # self.series = self.df.series.unique().tolist()
-        # self.series: Series = self.df.groupby("slug")["series"].unique()
-        self.data_columns = []
-        for data_column_id, _ in data_columns.items():
-            self.data_columns.append(data_column_id)
-            setattr(
-                self,
-                data_column_id,
-                self.df.groupby(f"{data_column_id}_slug")[data_column_id].unique(),
+        # Add slug columns
+        for column_id in data_columns:
+            self.df[f"{column_id}_slug"] = self.df[column_id].apply(
+                lambda x: "_".join(
+                    transliterate(str(x), "arabic", "tim").lower().replace("\\", "").split(" ")
+                )
             )
+        # Add id column
+        self.df["id"] = self.df.apply(
+            lambda row: "_".join(
+                [row[f"{col_id}_slug"] for col_id in data_columns] + [row["lecture"]]
+            ),
+            axis=1,
+        )
+        self.hierarchy = self.create_hierarchy(data_columns, lecture_components)
 
-    #
-    # def __len__(self):
-    #     return len(self.items)
+    def create_hierarchy(
+        self, data_columns: dict[str, str], lecture_components: dict[str, str]
+    ) -> dict[str, Any]:
+        hierarchy: dict[str, Any] = {}
+        for data_column_id, data_column_name in data_columns.items():
+            hierarchy[data_column_name] = {}
+            name: str
+            data: DataFrame
+            for name, data in self.df.groupby(data_column_id, sort=False):
+                if not name:
+                    continue
+                hierarchy[data_column_name][name] = {}
+                for row in data.itertuples():
+                    hierarchy[data_column_name][name][str(row.lecture)] = {
+                        component: getattr(row, component) for component in lecture_components
+                    } | {"__data": True, "id": row.id}
+        return hierarchy
+
+    def navigate_hierarchy(self, path: list[str]) -> dict | None:
+        current_level = self.hierarchy
+        for item in path:
+            if item in current_level:
+                current_level = current_level[item]
+            else:
+                return None
+        return current_level

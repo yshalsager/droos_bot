@@ -1,16 +1,19 @@
 [tool.poetry]
 name = "droos-bot"
-version = "0.3.0"
+version = "1.0.0"
 description = ""
 authors = ["yshalsager <ysh-alsager@hotmail.com>"]
 license = "MIT"
+readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-python-telegram-bot = "^21.4"
-python-telegram-bot-pagination = "^0.0.3"
 gspread = "^5.12.4"
 gspread-pandas = "^3.3.0"
+pyarabic = "^0.6.15"
+python-telegram-bot = "^21.4"
+python-telegram-bot-pagination = "^0.0.3"
 SQLAlchemy = "^2.0.31"
 
 [tool.poetry.group.dev.dependencies]

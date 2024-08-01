@@ -1,0 +1,26 @@
+{
+  "tg_bot_token": "0000000000:aaaaaaaaaaaaaaaaaaaa",
+  "tg_bot_admins": [
+    100000,
+    200000,
+    300000
+  ],
+  "tg_feedback_chat_id": -10000000000,
+  "sheet_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "sheet_name": "sheet",
+  "data_columns": {
+    "series": "السلاسل العلمية"
+  },
+  "lecture_components": {
+    "book": "📕 الكتاب",
+    "main": "📝 المحاور",
+    "video": "🎞 فيديو",
+    "voice": "🎧 صوتي",
+    "text": "📄 تفريغ",
+    "summary": "📎 ملخص"
+  },
+  "hide": [],
+  "disable": [
+    "إرسال مواد"
+  ]
+}
