@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   droos_bot:
     container_name: droos_bot
