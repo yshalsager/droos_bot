@@ -47,14 +47,20 @@ class Spreadsheet:
         hierarchy: dict[str, Any] = {}
         for data_column_id, data_column_name in data_columns.items():
             hierarchy[data_column_name] = {}
-            name: str
+            name: tuple[str, ...]
             data: DataFrame
-            for name, data in self.df.groupby(data_column_id, sort=False):
-                if not name:
-                    continue
-                hierarchy[data_column_name][name] = {}
-                for row in data.itertuples():
-                    hierarchy[data_column_name][name][str(row.lecture)] = {
+            for name, data in self.df.groupby(
+                [data_column_id] if data_column_id == "series" else [data_column_id, "series"],
+                sort=False,
+                dropna=True,
+            ):
+                current_level = hierarchy[data_column_name]
+                for level in name:
+                    if level not in current_level:
+                        current_level[level] = {}
+                    current_level = current_level[level]
+                for index, row in enumerate(data.itertuples(), start=1):
+                    current_level[str(row.lecture) or str(index)] = {
                         component: getattr(row, component) for component in lecture_components
                     } | {"__data": True, "id": row.id}
         return hierarchy
