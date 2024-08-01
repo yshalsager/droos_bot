@@ -1,6 +1,6 @@
 """Feedback and files handler module."""
 
-from telegram import Update
+from telegram import MessageOriginHiddenUser, MessageOriginUser, Update
 from telegram.constants import MessageLimit, ParseMode
 from telegram.ext import (
     CommandHandler,
@@ -69,22 +69,21 @@ async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     assert update.effective_message is not None
     assert update.effective_chat is not None
     reply_to_message = update.effective_message.reply_to_message
-    if not reply_to_message.forward_from and reply_to_message.forward_sender_name:
-        chat_id = get_chat_id_by_name(reply_to_message.forward_sender_name)
+    if reply_to_message.forward_origin and isinstance(
+        reply_to_message.forward_origin, MessageOriginHiddenUser
+    ):
+        chat_id = get_chat_id_by_name(reply_to_message.forward_origin.sender_user_name)
         if not chat_id:
             await update.effective_message.reply_text(
                 "لا يمكن الرد على هذا المستخدم بسبب إعدادات حسابه",
                 reply_to_message_id=update.effective_message.message_id,
             )
             return
-    elif (
-        not reply_to_message.forward_sender_name
-        and reply_to_message.from_user.is_bot
-        and not reply_to_message.forward_from
-    ):
+    elif not reply_to_message.forward_origin and reply_to_message.from_user.is_bot:
         return
     else:
-        chat_id = reply_to_message.forward_from.id
+        assert isinstance(reply_to_message.forward_origin, MessageOriginUser)
+        chat_id = reply_to_message.forward_origin.sender_user.id
     replied_to_message_text = reply_to_message.text_html_urled or ""
     reply_with_message_text = (
         f"<b>رد المشرف على رسالتك السابقة:</b>\n\n{replied_to_message_text[:MessageLimit.MAX_TEXT_LENGTH - 150]}\n\n"
@@ -103,7 +102,7 @@ async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     admin_message = (
         f'<a href="{reply_to_message.link}">رُد</a> على '
         f'<a href="tg://user?id={chat_id}">'
-        f"{reply_to_message.forward_sender_name or reply_to_message.forward_from.full_name}</a> "
+        f"{reply_to_message.forward_origin.sender_user_name or reply_to_message.forward_origin.sender_user.full_name}</a> "
         f'<a href="{update.effective_message.link}">بهذا الرد</a>'
     )
     await update.effective_message.reply_text(
