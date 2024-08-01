@@ -61,7 +61,8 @@ async def handle_navigation(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             user_data["path"].append(query)
 
     current_level = sheet.navigate_hierarchy(user_data["path"])
-    assert current_level is not None
+    if current_level is None:
+        return await start_handler(update, context)
 
     if "__data" in current_level:
         await update.message.reply_text(
