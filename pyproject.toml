@@ -9,7 +9,7 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
-gspread = "^5.12.4"
+gspread = "^6.0.0"
 gspread-pandas = "^3.3.0"
 pyarabic = "^0.6.15"
 python-telegram-bot = "^21.4"
