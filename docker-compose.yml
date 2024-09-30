@@ -1,6 +1,5 @@
 services:
   droos_bot:
-    container_name: droos_bot
     build:
       context: ./
       dockerfile: Dockerfile
