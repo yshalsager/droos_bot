@@ -53,7 +53,11 @@ async def search_for_text(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int |
         for k, v in melted.groupby("column")["value"].unique().to_dict().items()
     }
     reply_markup = create_keyboard(
-        [f"{key} > {value}" for key, values in grouped_results.items() for value in values],
+        [
+            f"{key} > {value}"
+            for key, values in reversed(grouped_results.items())
+            for value in values
+        ],
         show_back=False,
         show_pagination=False,
     )
