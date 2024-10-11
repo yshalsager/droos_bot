@@ -57,8 +57,8 @@ class Spreadsheet:
                 current_level = hierarchy[data_column_name]
                 for level in name:
                     if level not in current_level:
-                        current_level[level] = {}
-                    current_level = current_level[level]
+                        current_level[level.strip()] = {}
+                    current_level = current_level[level.strip()]
                 for index, row in enumerate(data.itertuples(), start=1):
                     current_level[str(row.lecture) or str(index)] = {
                         component: getattr(row, component) for component in lecture_components
