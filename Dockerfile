@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS builder
+FROM python:3.13-slim AS builder
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -qq update && apt-get -qq install --no-install-recommends -y git > /dev/null \
@@ -9,7 +9,7 @@ WORKDIR app
 COPY requirements.txt .
 RUN pip install -r requirements.txt --user --no-cache --no-warn-script-location
 
-FROM python:3.12-slim
+FROM python:3.13-slim
 RUN apt-get -qq update && apt-get -qq install --no-install-recommends -y git > /dev/null \
 && apt-get clean  && rm -rf /var/lib/apt/lists/*
 RUN git config --global pull.rebase true
