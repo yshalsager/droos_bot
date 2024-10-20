@@ -1,7 +1,7 @@
 """broadcast module."""
 
 import logging
-from time import sleep
+from asyncio import sleep
 
 from telegram import Message, Update
 from telegram.error import TelegramError
@@ -31,7 +31,7 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                 message_id=message_to_send.message_id,
             )
             sent_successfully += 1
-            sleep(0.5)
+            await sleep(0.5)
         except TelegramError as err:
             failed_to_send += 1
             logger.warning(f"فشل إرسال الرسالة إلى {chat}:\n{err}")
