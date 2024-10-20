@@ -101,7 +101,7 @@ async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     admin_message = (
         f'<a href="{reply_to_message.link}">رُد</a> على '
         f'<a href="tg://user?id={chat_id}">'
-        f"{reply_to_message.forward_origin.sender_user_name or reply_to_message.forward_origin.sender_user.full_name}</a> "
+        f"{reply_to_message.forward_origin.sender_user_name if hasattr(reply_to_message.forward_origin, 'sender_user_name') else reply_to_message.forward_origin.sender_user.full_name}</a> "
         f'<a href="{update.effective_message.link}">بهذا الرد</a>'
     )
     await update.effective_message.reply_text(
