@@ -3,7 +3,7 @@ from typing import Any
 from pandas import DataFrame
 from sqlalchemy import Row
 from sqlalchemy.exc import MultipleResultsFound
-from sqlalchemy.sql.functions import sum
+from sqlalchemy.sql.functions import sum as sql_sum
 
 from droos_bot.db import Lecture
 from droos_bot.db.models.chat import Chat
@@ -56,14 +56,16 @@ def get_chats_count() -> tuple[int, int]:
 
 
 def get_usage_count() -> tuple[int, int, int]:
-    usage_times_row: Row | None = session.query(sum(Chat.usage_times).label("usage_times")).first()
+    usage_times_row: Row | None = session.query(
+        sql_sum(Chat.usage_times).label("usage_times")
+    ).first()
     usage_times: int = usage_times_row.usage_times if usage_times_row else 0
     series_requests_row: Row | None = session.query(
-        sum(Series.requests).label("series_requests")
+        sql_sum(Series.requests).label("series_requests")
     ).first()
     series_requests: int = series_requests_row.series_requests if series_requests_row else 0
     lecture_requests_row: Row | None = session.query(
-        sum(Lecture.requests).label("lecture_requests")
+        sql_sum(Lecture.requests).label("lecture_requests")
     ).first()
     lecture_requests: int = lecture_requests_row.lecture_requests if lecture_requests_row else 0
     return usage_times, series_requests, lecture_requests

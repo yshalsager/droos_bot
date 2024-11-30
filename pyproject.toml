@@ -1,32 +1,32 @@
-[tool.poetry]
+[project]
 name = "droos-bot"
 version = "1.0.0"
 description = ""
-authors = ["yshalsager <ysh-alsager@hotmail.com>"]
-license = "MIT"
+authors = [
+    { name = "yshalsager", email = "contact@yshalsager.com" },
+]
+license = { text = "MIT" }
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.13"
+dependencies = [
+    "gspread>=5.12.4",
+    "gspread-pandas>=3.3.0",
+    "pyarabic>=0.6.15",
+    "python-telegram-bot>=21.4",
+    "SQLAlchemy>=2.0.31"
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-gspread = "^5.12.4"
-gspread-pandas = "^3.3.0"
-pyarabic = "^0.6.15"
-python-telegram-bot = "^21.4"
-SQLAlchemy = "^2.0.31"
-
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^4.0.0"
-jurigged = "^0.6.0"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "ruff>=0.8.1",
+    "pre-commit>=4.0.0",
+    "jurigged>=0.6.0"
+]
 
 [tool.ruff]  # https://github.com/charliermarsh/ruff
 fix = true
 src = ["droos_bot"]
-target-version = "py312"
+target-version = "py313"
 line-length = 100
 
 [tool.ruff.format]
