@@ -40,8 +40,7 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
     if failed_to_send:
         broadcast_status_message += (
-            f" فشل الإرسال إلى {failed_to_send}"
-            f"مستخدمين/مجموعات، غالبا بسبب أن البوت طرد أو أوقف."
+            f" فشل الإرسال إلى {failed_to_send}مستخدمين/مجموعات، غالبا بسبب أن البوت طرد أو أوقف."
         )
     await update.effective_message.reply_text(
         broadcast_status_message,

@@ -86,7 +86,7 @@ async def reply_to_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         chat_id = reply_to_message.forward_origin.sender_user.id
     replied_to_message_text = reply_to_message.text_html_urled or ""
     reply_with_message_text = (
-        f"<b>رد المشرف على رسالتك السابقة:</b>\n\n{replied_to_message_text[:MessageLimit.MAX_TEXT_LENGTH - 150]}\n\n"
+        f"<b>رد المشرف على رسالتك السابقة:</b>\n\n{replied_to_message_text[: MessageLimit.MAX_TEXT_LENGTH - 150]}\n\n"
         f"<b>ملاحظة</b>:\nللرد على هذه الرسالة اضغط على زر التواصل والاقتراحات أولا ثم أرسل الرد"
     )
     await context.bot.send_message(
