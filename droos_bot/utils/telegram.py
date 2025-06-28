@@ -12,7 +12,7 @@ from telegram.ext import Application
 F = TypeVar("F", bound=Callable[..., Any])
 
 
-def tg_exceptions_handler(func: F) -> F:
+def tg_exceptions_handler[F: Callable[..., Any]](func: F) -> F:
     @wraps(func)
     def wrapper(*args: Any, **kwargs: Any) -> F:  # type: ignore[return]
         try:
