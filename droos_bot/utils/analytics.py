@@ -16,7 +16,7 @@ from droos_bot.utils.telegram import get_chat_type
 F = TypeVar("F", bound=Callable[..., Any])
 
 
-def add_new_chat_to_db(func: F) -> F:
+def add_new_chat_to_db[F: Callable[..., Any]](func: F) -> F:
     @wraps(func)
     def wrapper(update: Update, context: CallbackContext, *args: Any, **kwargs: Any) -> F:
         assert update.effective_chat is not None
@@ -32,7 +32,7 @@ def add_new_chat_to_db(func: F) -> F:
     return cast(F, wrapper)
 
 
-def analysis(func: F) -> F:
+def analysis[F: Callable[..., Any]](func: F) -> F:
     @wraps(func)
     async def wrapper(update: Update, context: CallbackContext) -> None:
         lecture_info = await func(update, context)
