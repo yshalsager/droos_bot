@@ -56,5 +56,5 @@ repos:
         args:
           - --install-types
         additional_dependencies:
-          - SQLAlchemy==2.0.41
+          - SQLAlchemy==2.0.42
 
