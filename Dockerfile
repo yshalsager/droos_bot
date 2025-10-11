@@ -1,4 +1,4 @@
-FROM python:3.13-slim
+FROM python:3.14-slim
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -qq update && apt-get -qq install --no-install-recommends -y git > /dev/null \
