@@ -44,7 +44,7 @@ repos:
         types: [ python ]
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: 'v0.14.13'
+    rev: 'v0.14.14'
     hooks:
       - id: ruff
         args: [ --fix ]
@@ -56,5 +56,5 @@ repos:
         args:
           - --install-types
         additional_dependencies:
-          - SQLAlchemy==2.0.45
+          - SQLAlchemy==2.0.46
 
