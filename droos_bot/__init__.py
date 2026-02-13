@@ -5,6 +5,7 @@ import logging.config
 from functools import partial
 from pathlib import Path
 
+from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
 from telegram.ext import ApplicationBuilder, Defaults, PicklePersistence
 
@@ -72,7 +73,7 @@ logging.config.dictConfig(logging_config)
 
 # bot
 persistence = PicklePersistence(filepath=f"{PARENT_DIR}/bot.pickle")
-defaults = Defaults(parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+defaults = Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True))
 
 application = (
     ApplicationBuilder()
