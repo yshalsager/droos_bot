@@ -73,7 +73,9 @@ logging.config.dictConfig(logging_config)
 
 # bot
 persistence = PicklePersistence(filepath=f"{PARENT_DIR}/bot.pickle")
-defaults = Defaults(parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True))
+defaults = Defaults(
+    parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)
+)
 
 application = (
     ApplicationBuilder()
