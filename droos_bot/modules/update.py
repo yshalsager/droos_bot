@@ -8,6 +8,8 @@ from droos_bot.modules.restart import restart
 from droos_bot.utils.commands import run_command
 from droos_bot.utils.filters import FilterBotAdmin
 
+BOT_COMMANDS = [("update", "تحديث كود البوت", "admin")]
+
 
 async def update_(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Update the bot then restart."""

@@ -16,6 +16,7 @@ from droos_bot.utils.keyboards import cancel_search_keyboard, create_keyboard, m
 from droos_bot.utils.telegram import tg_exceptions_handler
 
 START_SEARCH = 0
+BOT_COMMANDS = [("cancel", "إلغاء العملية الحالية", "user")]
 
 
 @tg_exceptions_handler

@@ -13,6 +13,7 @@ from droos_bot.utils.filters import FilterBotAdmin
 from droos_bot.utils.telegram import tg_exceptions_handler
 
 logger = logging.getLogger(__name__)
+BOT_COMMANDS = [("broadcast", "إرسال رسالة جماعية", "admin")]
 
 
 @tg_exceptions_handler

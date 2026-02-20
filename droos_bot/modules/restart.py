@@ -11,6 +11,8 @@ from telegram.ext import CommandHandler, ContextTypes, filters
 from droos_bot import PARENT_DIR, application
 from droos_bot.utils.filters import FilterBotAdmin
 
+BOT_COMMANDS = [("restart", "إعادة تشغيل البوت", "admin")]
+
 
 async def restart(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     """Restarts the bot."""

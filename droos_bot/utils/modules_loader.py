@@ -15,11 +15,12 @@ def get_modules(modules_path: Path) -> filter:
     )
 
 
-def load_modules(modules: filter, directory: str) -> None:
+def load_modules(modules: filter, directory: str) -> list[str]:
     """Load all modules in modules list."""
     loaded_modules = []
     for module in modules:
         module_name = f"{directory}.modules.{module.stem}"
         import_module(module_name)
-        loaded_modules.append(module.stem)
-    logger.info(f"Loaded modules: {loaded_modules!s}")
+        loaded_modules.append(module_name)
+    logger.info(f"Loaded modules: {[name.rsplit('.', 1)[-1] for name in loaded_modules]!s}")
+    return loaded_modules

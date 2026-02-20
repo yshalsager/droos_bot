@@ -2,18 +2,17 @@
 
 import json
 import logging.config
-from functools import partial
 from pathlib import Path
 
 from telegram import LinkPreviewOptions
 from telegram.constants import ParseMode
-from telegram.ext import ApplicationBuilder, Defaults, PicklePersistence
+from telegram.ext import Application, ApplicationBuilder, Defaults, PicklePersistence
 
 from droos_bot.gsheet.spreadsheet import Spreadsheet
-from droos_bot.utils.telegram import handle_restart
+from droos_bot.utils.telegram import handle_restart, setup_scoped_commands
 
 # paths
-WORK_DIR = Path(__package__)
+WORK_DIR = Path(__package__ or "droos_bot")
 PARENT_DIR = WORK_DIR.parent
 
 # bot config
@@ -77,12 +76,18 @@ defaults = Defaults(
     parse_mode=ParseMode.HTML, link_preview_options=LinkPreviewOptions(is_disabled=True)
 )
 
+
+async def post_init(application: Application) -> None:
+    await handle_restart(PARENT_DIR, application)
+    await setup_scoped_commands(application, TG_BOT_ADMINS)
+
+
 application = (
     ApplicationBuilder()
     .token(BOT_TOKEN)
     .defaults(defaults)
     .persistence(persistence)
-    .post_init(partial(handle_restart, PARENT_DIR))
+    .post_init(post_init)
     .build()
 )
 sheet = Spreadsheet(

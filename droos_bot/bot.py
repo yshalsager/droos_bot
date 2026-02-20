@@ -8,7 +8,7 @@ from droos_bot.utils.modules_loader import load_modules
 def main() -> None:
     """Run bot."""
     # Load all modules in modules list
-    load_modules(ALL_MODULES, __package__)
+    application.bot_data["loaded_modules"] = load_modules(ALL_MODULES, __package__ or "droos_bot")
     # Start the Bot
     application.run_polling()
 

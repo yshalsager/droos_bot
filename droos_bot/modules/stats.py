@@ -14,6 +14,8 @@ from droos_bot.db.curd import (
 )
 from droos_bot.utils.filters import FilterBotAdmin
 
+BOT_COMMANDS = [("stats", "عرض إحصائيات البوت", "admin")]
+
 
 async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
     stats_message = await update.message.reply_text("جاري تحضير الإحصائيات…")

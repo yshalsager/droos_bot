@@ -5,6 +5,11 @@ from droos_bot import application
 from droos_bot.utils.analytics import add_new_chat_to_db
 from droos_bot.utils.keyboards import main_keyboard
 
+BOT_COMMANDS = [
+    ("start", "بدء استخدام البوت", "user"),
+    ("help", "عرض طريقة الاستخدام", "user"),
+]
+
 
 @add_new_chat_to_db
 async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
