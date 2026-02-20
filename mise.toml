@@ -1,6 +1,7 @@
 [tools]
 uv = 'latest'
 python = '3.14.3'
+"aqua:evilmartians/lefthook" = "2"
 
 [tasks.default]
 run = 'python -m droos_bot'

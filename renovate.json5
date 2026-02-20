@@ -2,7 +2,6 @@
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
     'config:recommended',
-    ':enablePreCommit',
     ':rebaseStalePrs',
     'group:allNonMajor',
   ],
@@ -28,19 +27,6 @@
         'digest',
       ],
       automerge: true,
-    },
-  ],
-  customManagers: [
-    {
-      customType: 'regex',
-      fileMatch: [
-        '\\.pre-commit-config\\.yaml',
-      ],
-      matchStrings: [
-        '(?<depName>[^\'" ]+)==(?<currentValue>[^\'" ,\\s]+)',
-      ],
-      datasourceTemplate: 'pypi',
-      versioningTemplate: 'pep440',
     },
   ],
   pip_requirements: {

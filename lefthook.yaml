@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: '*.py'
+      run: uv run ruff check --fix {staged_files}
+      stage_fixed: true
+    fmt:
+      glob: '*.py'
+      run: uv run ruff format {staged_files}
+      stage_fixed: true
+    ty:
+      glob: '*.py'
+      run: uv run ty check droos_bot --output-format concise
