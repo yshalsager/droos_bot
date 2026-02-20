@@ -3,7 +3,7 @@
 import logging
 from asyncio import sleep
 
-from telegram import Message, Update
+from telegram import Update
 from telegram.error import TelegramError
 from telegram.ext import CommandHandler, ContextTypes, filters
 
@@ -19,15 +19,17 @@ BOT_COMMANDS = [("broadcast", "إرسال رسالة جماعية", "admin")]
 @tg_exceptions_handler
 async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Broadcasts message to bot users."""
-    assert update.effective_message is not None
+    message = update.effective_message
+    assert message is not None
     assert update.effective_chat is not None
-    message_to_send: Message = update.effective_message.reply_to_message
+    message_to_send = message.reply_to_message
+    assert message_to_send is not None
     failed_to_send = 0
     sent_successfully = 0
     for chat in get_all_chats():
         try:
             await context.bot.copy_message(
-                chat_id=chat.user_id,
+                chat_id=int(chat.user_id),
                 from_chat_id=message_to_send.chat.id,
                 message_id=message_to_send.message_id,
             )
@@ -43,14 +45,16 @@ async def broadcast(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         broadcast_status_message += (
             f" فشل الإرسال إلى {failed_to_send}مستخدمين/مجموعات، غالبا بسبب أن البوت طرد أو أوقف."
         )
-    await update.effective_message.reply_text(
+    await message.reply_text(
         broadcast_status_message,
-        reply_to_message_id=update.effective_message.message_id,
+        reply_to_message_id=message.message_id,
     )
 
 
 application.add_handler(
     CommandHandler(
-        "broadcast", broadcast, filters=filters.ChatType.PRIVATE & filters.REPLY & FilterBotAdmin()
+        "broadcast",
+        broadcast,  # ty: ignore[invalid-argument-type]
+        filters=filters.ChatType.PRIVATE & filters.REPLY & FilterBotAdmin(),
     )
 )

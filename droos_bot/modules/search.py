@@ -1,7 +1,5 @@
 """Data search module."""
 
-from typing import cast
-
 from telegram import Update
 from telegram.ext import (
     CommandHandler,
@@ -21,10 +19,11 @@ BOT_COMMANDS = [("cancel", "إلغاء العملية الحالية", "user")]
 
 @tg_exceptions_handler
 async def search_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
-    assert update.effective_message is not None
-    await update.message.reply_text(
+    message = update.effective_message
+    assert message is not None
+    await message.reply_text(
         "اكتب ما تريد البحث عنه",
-        reply_to_message_id=update.effective_message.message_id,
+        reply_to_message_id=message.message_id,
         reply_markup=cancel_search_keyboard,
     )
     return START_SEARCH
@@ -32,8 +31,10 @@ async def search_handler(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int:
 
 @tg_exceptions_handler
 async def search_for_text(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int | None:
-    assert update.effective_message is not None
-    search_text = update.effective_message.text.strip()
+    message = update.effective_message
+    assert message is not None
+    assert message.text is not None
+    search_text = message.text.strip()
     match = sheet.df[
         sheet.df[list(DATA_COLUMNS.keys())]
         .astype(str)
@@ -41,9 +42,7 @@ async def search_for_text(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int |
         .any(axis=1)
     ]
     if match.empty:
-        await update.message.reply_text(
-            "لا يوجد نتائج", reply_to_message_id=update.effective_message.message_id
-        )
+        await message.reply_text("لا يوجد نتائج", reply_to_message_id=message.message_id)
         return None
     melted = match.melt(
         id_vars=["id"], value_vars=list(DATA_COLUMNS.keys()), var_name="column", value_name="value"
@@ -62,26 +61,35 @@ async def search_for_text(update: Update, _: ContextTypes.DEFAULT_TYPE) -> int |
         show_back=False,
         show_pagination=False,
     )
-    await update.message.reply_text(
+    await message.reply_text(
         "نتائج البحث:",
         reply_markup=reply_markup,
-        reply_to_message_id=update.effective_message.message_id,
+        reply_to_message_id=message.message_id,
     )
-    return cast(int, ConversationHandler.END)
+    return ConversationHandler.END
 
 
 async def cancel_search_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    context.user_data["path"] = []
-    await update.message.reply_text(
+    message = update.effective_message
+    assert message is not None
+    user_data = context.user_data
+    assert user_data is not None
+    user_data["path"] = []
+    await message.reply_text(
         "يمكنك متابعة استخدام البوت من خلال الأزرار الظاهرة بالأسفل",
         reply_markup=main_keyboard,
     )
-    return cast(int, ConversationHandler.END)
+    return ConversationHandler.END
 
 
 application.add_handler(
     ConversationHandler(
-        entry_points=[MessageHandler(filters.Regex("^البحث في المحتوى$"), search_handler)],
+        entry_points=[
+            MessageHandler(
+                filters.Regex("^البحث في المحتوى$"),
+                search_handler,  # ty: ignore[invalid-argument-type]
+            )
+        ],
         states={
             START_SEARCH: [
                 MessageHandler(
@@ -92,14 +100,15 @@ application.add_handler(
                         | filters.Regex("^البحث في المحتوى$")
                         | filters.Regex("^إلغاء البحث$")
                     ),
-                    search_for_text,
+                    search_for_text,  # ty: ignore[invalid-argument-type]
                 )
             ],
         },
         fallbacks=[
             CommandHandler("cancel", cancel_search_handler, filters.ChatType.PRIVATE),
             MessageHandler(
-                filters.ChatType.PRIVATE & filters.Regex("^إلغاء البحث$"), cancel_search_handler
+                filters.ChatType.PRIVATE & filters.Regex("^إلغاء البحث$"),
+                cancel_search_handler,
             ),
             MessageHandler(
                 filters.ChatType.PRIVATE & filters.Regex("^(القائمة الرئيسية 🏠)$"),

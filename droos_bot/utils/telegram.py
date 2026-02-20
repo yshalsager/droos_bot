@@ -1,17 +1,15 @@
 import json
 import sys
-from collections.abc import Callable
+from asyncio import sleep
+from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from functools import wraps
 from pathlib import Path
-from time import sleep
-from typing import Any, TypeVar, cast
+from typing import Any, cast
 
 from telegram import BotCommand, BotCommandScopeAllPrivateChats, BotCommandScopeChat, Update
 from telegram.error import BadRequest, Forbidden, RetryAfter
 from telegram.ext import Application, CommandHandler, ConversationHandler
-
-F = TypeVar("F", bound=Callable[..., Any])
 
 
 def collect_scoped_commands(application: Application) -> tuple[list[BotCommand], list[BotCommand]]:
@@ -51,31 +49,29 @@ def collect_scoped_commands(application: Application) -> tuple[list[BotCommand],
     return user_commands, admin_only_commands
 
 
-def tg_exceptions_handler[F: Callable[..., Any]](func: F) -> F:
+def tg_exceptions_handler[**P, T](func: Callable[P, Awaitable[T]]) -> Callable[P, Awaitable[T]]:
     @wraps(func)
-    def wrapper(*args: Any, **kwargs: Any) -> F:  # type: ignore[return]
+    async def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
         try:
-            return cast(F, func(*args, **kwargs))
+            return await func(*args, **kwargs)
         except BadRequest as err:
             if "Message is not modified" in err.message:
-                pass
-            else:
-                raise err
+                return cast(T, None)
+            raise err
 
         except Forbidden as err:
             if "bot was blocked by the user" in err.message:
-                pass
-            else:
-                raise err
+                return cast(T, None)
+            raise err
         except RetryAfter as error:
-            sleep(
+            await sleep(
                 error.retry_after.total_seconds()
                 if isinstance(error.retry_after, timedelta)
                 else error.retry_after
             )
-            return tg_exceptions_handler(cast(F, func(*args, **kwargs)))
+            return await wrapper(*args, **kwargs)
 
-    return cast(F, wrapper)
+    return wrapper
 
 
 def get_chat_type(update: Update) -> int:

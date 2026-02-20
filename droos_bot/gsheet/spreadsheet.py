@@ -47,22 +47,23 @@ class Spreadsheet:
         hierarchy: dict[str, Any] = {}
         for data_column_id, data_column_name in data_columns.items():
             hierarchy[data_column_name] = {}
-            name: tuple[str, ...]
             data: DataFrame
-            for name, data in self.df.groupby(
+            for group_key, data in self.df.groupby(
                 [data_column_id] if data_column_id == "series" else [data_column_id, "series"],
                 sort=False,
                 dropna=True,
             ):
                 current_level = hierarchy[data_column_name]
-                for level in name:
-                    if level not in current_level:
-                        current_level[level.strip()] = {}
-                    current_level = current_level[level.strip()]
-                for index, row in enumerate(data.itertuples(), start=1):
-                    current_level[str(row.lecture) or str(index)] = {
-                        component: getattr(row, component) for component in lecture_components
-                    } | {"__data": True, "id": row.id}
+                levels = group_key if isinstance(group_key, tuple) else (group_key,)
+                for level in levels:
+                    level_name = str(level).strip()
+                    if level_name not in current_level:
+                        current_level[level_name] = {}
+                    current_level = current_level[level_name]
+                for index, row in enumerate(data.to_dict("records"), start=1):
+                    current_level[str(row.get("lecture") or index)] = {
+                        component: row.get(component) for component in lecture_components
+                    } | {"__data": True, "id": row.get("id")}
         return hierarchy
 
     def navigate_hierarchy(self, path: list[str]) -> dict | None:

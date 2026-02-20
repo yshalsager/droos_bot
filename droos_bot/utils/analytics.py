@@ -3,7 +3,7 @@ from functools import wraps
 from typing import Any, TypeVar, cast
 
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 
 from droos_bot.db.curd import (
     add_chat_to_db,
@@ -18,23 +18,29 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 def add_new_chat_to_db[F: Callable[..., Any]](func: F) -> F:
     @wraps(func)
-    def wrapper(update: Update, context: CallbackContext, *args: Any, **kwargs: Any) -> F:
+    async def wrapper(
+        update: Update,
+        context: ContextTypes.DEFAULT_TYPE,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Any:
         assert update.effective_chat is not None
         assert update.effective_chat.id is not None
-        assert (update.effective_chat.full_name or update.effective_chat.title) is not None
+        user_name = update.effective_chat.full_name or update.effective_chat.title
+        assert user_name is not None
         add_chat_to_db(
             update.effective_chat.id,
-            update.effective_chat.full_name or update.effective_chat.title,
+            user_name,
             get_chat_type(update),
         )
-        return cast(F, func(update, context, *args, **kwargs))
+        return await func(update, context, *args, **kwargs)
 
     return cast(F, wrapper)
 
 
 def analysis[F: Callable[..., Any]](func: F) -> F:
     @wraps(func)
-    async def wrapper(update: Update, context: CallbackContext) -> None:
+    async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Any:
         lecture_info = await func(update, context)
         assert update.effective_message is not None
         if not lecture_info:

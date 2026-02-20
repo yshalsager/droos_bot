@@ -18,7 +18,9 @@ BOT_COMMANDS = [("stats", "عرض إحصائيات البوت", "admin")]
 
 
 async def stats(update: Update, _: ContextTypes.DEFAULT_TYPE) -> None:
-    stats_message = await update.message.reply_text("جاري تحضير الإحصائيات…")
+    message = update.effective_message
+    assert message is not None
+    stats_message = await message.reply_text("جاري تحضير الإحصائيات…")
     all_chats, active_chats = get_chats_count()
     usage_times, series_requests, lecture_requests = get_usage_count()
     top_series: list[Series] = get_top_series()
