@@ -3,12 +3,14 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    command: bash -c "cd app && python3 -m droos_bot"
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    working_dir: /app
+    command: ['uv', 'run', 'python', '-m', 'droos_bot']
     environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Africa/Cairo
-      - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     volumes:
-      - "./:/app/app"
+      - './:/app'
+      - '/etc/localtime:/etc/localtime:ro'
