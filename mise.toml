@@ -1,6 +1,6 @@
 [tools]
 uv = 'latest'
-python = '3.14.3'
+python = '3.14.4'
 "aqua:evilmartians/lefthook" = "2"
 
 [tasks.default]
