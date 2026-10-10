@@ -1,5 +1,5 @@
-# syntax=docker/dockerfile:1.27
-ARG UV_IMAGE=ghcr.io/astral-sh/uv:0.12
+# syntax=docker/dockerfile:1.28
+ARG UV_IMAGE=ghcr.io/astral-sh/uv:0.13
 FROM ${UV_IMAGE} AS uv
 
 FROM public.ecr.aws/docker/library/python:3.14-slim
