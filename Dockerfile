@@ -2,7 +2,7 @@
 ARG UV_IMAGE=ghcr.io/astral-sh/uv:0.13
 FROM ${UV_IMAGE} AS uv
 
-FROM public.ecr.aws/docker/library/python:3.14-slim
+FROM public.ecr.aws/docker/library/python:3.15-slim
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
