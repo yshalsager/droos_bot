@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1.28
+# syntax=docker/dockerfile:1.29
 ARG UV_IMAGE=ghcr.io/astral-sh/uv:0.13
 FROM ${UV_IMAGE} AS uv
 
